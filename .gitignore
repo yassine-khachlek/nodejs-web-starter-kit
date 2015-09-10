@@ -1,0 +1,15 @@
+# Dependency directory
+node_modules
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*~
