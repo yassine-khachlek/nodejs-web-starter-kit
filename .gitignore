@@ -3,7 +3,7 @@ node_modules
 
 # Bower
 .bower
-public/components/*
+public/components
 
 # Runtime data
 pids
