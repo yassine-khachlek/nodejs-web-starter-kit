@@ -15,5 +15,18 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
-  }
+  },
+  "description": "## Install ``` npm install ```",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yassine-khachlek/nodejs-web-starter-kit.git"
+  },
+  "author": "",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/yassine-khachlek/nodejs-web-starter-kit/issues"
+  },
+  "homepage": "https://github.com/yassine-khachlek/nodejs-web-starter-kit#readme"
 }

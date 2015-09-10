@@ -1,0 +1,15 @@
+{
+  "directory": "public/components",
+  "analytics": false,
+  "timeout": 120000,
+  "registry": {
+    "search": [
+      "https://bower.herokuapp.com"
+    ]
+  },
+  "storage": {
+    "packages": ".bower/cache",
+    "registry": ".bower/registry"
+  },  
+  "tmp": ".bower/tmp"
+}

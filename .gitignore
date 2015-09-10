@@ -1,6 +1,10 @@
 # Dependency directory
 node_modules
 
+# Bower
+.bower
+public/components/*
+
 # Runtime data
 pids
 *.pid
