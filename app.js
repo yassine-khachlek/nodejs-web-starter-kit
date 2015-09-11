@@ -4,9 +4,25 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+var routes = [];
+var routesFiles = [];
+
+// Get the list of routes files
+fs.readdirSync(path.resolve(__dirname, 'routes')).forEach(function(fileName) {
+  // Filter *.js
+  if( fileName.split('.')[ fileName.split('.').length-1 ] === 'js' ){
+    routesFiles.push(fileName.split('.')[0]);
+  }
+});
+
+//var routes = require('./routes/index');
+//var users = require('./routes/users');
+
+routesFiles.forEach(function(val, index){
+  routes[val] = require('./routes/' + val);
+});
 
 var app = express();
 
@@ -22,8 +38,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+//app.use('/', routes);
+//app.use('/users', users);
+
+Object.keys(routes).forEach(function(key){
+  if( key === 'index' ){
+    // Set index file as a home page at /
+    app.use('/', routes[key]);
+  }else{
+    // Use the filename as an uri
+    app.use('/'+key, routes[key]);  
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
