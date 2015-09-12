@@ -42,14 +42,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/users', users);
 
 Object.keys(routes).forEach(function(key){
+
+  // Use the filename as an uri
+  app.use('/'+key, routes[key]);
+
+  // Set index file as a home page at /
   if( key === 'index' ){
-    // Set index file as a home page at /
     app.use('/', routes[key]);
-  }else{
-    // Use the filename as an uri
-    app.use('/'+key, routes[key]);  
   }
+
 });
+
+app.set('routes', routesFiles);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
