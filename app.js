@@ -6,6 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+var passport = require('passport')
+  , FacebookStrategy = require('passport-facebook').Strategy;
+var session = require('express-session');
+var flash = require('connect-flash');
+
 var appGlobal = {};
 
 var routes = [];
@@ -35,6 +40,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // NOT WORKING WITH enctype="multipart/form-data"
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Needed for passport seesion and flash messages
+app.use(session({ secret: 'veryverysecretsecret', cookie: { maxAge: 1000*60*60*24 } })); // One day
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 
 Object.keys(routes).forEach(function(key){
 

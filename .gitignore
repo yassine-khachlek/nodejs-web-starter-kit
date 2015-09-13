@@ -5,6 +5,9 @@ node_modules
 .bower
 public/components
 
+# Config
+config/production.json
+
 # Runtime data
 pids
 *.pid
