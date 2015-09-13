@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+var appGlobal = {};
+
 var routes = [];
 var routesFiles = [];
 
@@ -17,9 +19,6 @@ fs.readdirSync(path.resolve(__dirname, 'routes')).forEach(function(fileName) {
   }
 });
 
-//var routes = require('./routes/index');
-//var users = require('./routes/users');
-
 routesFiles.forEach(function(val, index){
   routes[val] = require('./routes/' + val);
 });
@@ -30,16 +29,12 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true })); // NOT WORKING WITH enctype="multipart/form-data"
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-//app.use('/', routes);
-//app.use('/users', users);
 
 Object.keys(routes).forEach(function(key){
 
@@ -53,7 +48,9 @@ Object.keys(routes).forEach(function(key){
 
 });
 
-app.set('routes', routesFiles);
+appGlobal.routes = routesFiles
+
+app.set('app', appGlobal);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

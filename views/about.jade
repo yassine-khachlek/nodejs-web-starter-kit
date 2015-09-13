@@ -1,0 +1,26 @@
+extends layout
+
+block content
+  //- h1= title
+  //- p Welcome to #{title}
+
+  .container
+    .row
+      .col-sm-3.col-md-2.sidebar
+        ul.nav.nav-sidebar
+          each val, index in routes
+            li
+              a(href='/'+val)=val.charAt(0).toUpperCase() + val.slice(1)
+
+      .col-sm-9.col-md-10.sidebar
+        h1 About
+        p 
+          | Node.js Web Starter Kit is my Node.js starter kit for building web applications based on expressjs and other common modules.
+        .row
+          .col-sm-12.col-md-12
+            img.img-thumbnail(src='/images/nodejs-logo.png', style='height: 100px;')
+          .col-sm-12.col-md-12
+          .col-sm-12.col-md-12
+          .col-sm-12.col-md-12
+            img.img-thumbnail(src='/images/express-logo.png', style='height: 100px;')
+
