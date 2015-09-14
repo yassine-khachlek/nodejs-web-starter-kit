@@ -6,9 +6,9 @@ var users = [];
 
 for(i=1;i<10;+i++){
   users.push({
-    "id": i,
-    "username": "username_"+i,
-    "password": "password_"+i,
+    'id': i,
+    'username': 'username_'+i,
+    'password': 'password_'+i,
   });
 }
 
@@ -20,20 +20,20 @@ users.forEach(function(user, index){
 
     if (err) { // the key was not found
 
-      console.log("NOT FOUND: ", err);
+      console.log('NOT FOUND: ', err);
 
-      db.put(user.id, JSON.stringify(user), function (err) {
+      db.put(user.id, user, {keyEncoding: 'utf8',valueEncoding: 'json',sync: true},function (err) {
         
         if (err){ // some kind of I/O error
           console.log(err);
         }else{
-            console.log("ADDED", JSON.stringify(user));
+          console.log('ADDED', user);
         }
 
       })
 
     }else{
-      console.log("EXIST", userValue);
+      console.log('EXIST', userValue);
     }
 
   })
