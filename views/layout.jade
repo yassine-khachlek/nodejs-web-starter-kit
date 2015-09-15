@@ -33,18 +33,27 @@ html
             //-   a(href='#contact') Contact
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-                if session && session.passport && session.passport.user && session.passport.user && session.passport.user._json && session.passport.user._json.name
-                  = 'Hi, ' + session.passport.user._json.name
+                if reqUser
+                  = 'Hi, ' + reqUser.username
                 else
                   | Hi, Guest
                 span.caret
               ul.dropdown-menu
                 li
-                  if session && session.passport && session.passport.user && session.passport.user && session.passport.user._json && session.passport.user._json.name
+                  if reqUser
                     a(href='/auth/logout') Logout
                   else
-                    a(href='/auth/facebook') Login with Facebook
-    
+                    a(href='/auth') Log in
+  
+    .container-fluid
+      .row
+
+        .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+
+          if reqFlashSuccess && reqFlashSuccess!=''
+            .alert.alert-success(role='alert')
+                =reqFlashSuccess
+
     block content
     //-
         img(src='/images/nodejs-light.svg')

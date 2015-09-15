@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 
 var passport = require('passport')
+  , LocalStrategy = require('passport-local').Strategy
   , FacebookStrategy = require('passport-facebook').Strategy;
 var session = require('express-session');
 var flash = require('connect-flash');

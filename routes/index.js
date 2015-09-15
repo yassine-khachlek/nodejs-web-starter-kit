@@ -5,7 +5,8 @@ router.get('/', function(req, res, next) {
   res.render('index', { 
   	title: 'Express',
   	routes: req.app.get('app').routes,
-  	session: req.session
+  	reqUser: req.user,
+    reqFlashSuccess: req.flash('success'),   	
   });
 });
 
