@@ -21,6 +21,22 @@ passport.use(new FacebookStrategy({
   }
 ));
 
+router.get('/', function(req, res, next) {
+  res.render('auth', { 
+    title: 'Express',
+    routes: req.app.get('app').routes,
+    session: req.session
+  });
+});
+
+router.get('/login', function(req, res, next) {
+  res.render('login', { 
+    title: 'Express',
+    routes: req.app.get('app').routes,
+    session: req.session
+  });
+});
+
 router.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');

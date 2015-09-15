@@ -1,0 +1,24 @@
+#loginbox {
+    margin-top: 0px;
+}
+
+#loginbox > div:first-child {        
+    padding-bottom: 0px;    
+}
+
+#form > div {
+    margin-bottom: 16px;
+}
+
+#form > div:last-child {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.panel {    
+    background-color: transparent;
+}
+
+.panel-body {
+    padding-top: 16px;
+}

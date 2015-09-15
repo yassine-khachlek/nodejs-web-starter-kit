@@ -4,10 +4,12 @@ block content
   //- h1= title
   //- p Welcome to #{title}
 
-  .container
-    .jumbotron
-      img(src='/images/nodejs-light.svg')
-      h1 Nodejs Web Starter Kit
+  .container-fluid
+    .row
+      .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+        .jumbotron
+          img(src='/images/nodejs-light.svg')
+          h1 Nodejs Web Starter Kit
     //-
       p
         | This example is a quick exercise to illustrate how the default, static and fixed to top navbar work. It includes the responsive CSS and HTML, so it also adapts to your viewport and device.
@@ -15,9 +17,9 @@ block content
       p
         //- a.btn.btn-lg.btn-primary(href='../../components/#navbar', role='button') View navbar docs »
 
-  .container
+  .container-fluid
     .row
-      .col-sm-3.col-md-2.sidebar
+      .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
         ul.nav.nav-sidebar
           each val, index in routes
             li
