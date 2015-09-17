@@ -10,7 +10,7 @@ block content
         ul.nav.nav-sidebar
           each val, index in routes
             li
-              a(href='/'+val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)
+              a(href=val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)
 
       .col-xs-12.col-sm-9.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
         h1 About

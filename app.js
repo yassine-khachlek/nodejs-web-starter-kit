@@ -5,25 +5,35 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var config = require('config');
+
+var levelup = require('level')
 
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy
   , FacebookStrategy = require('passport-facebook').Strategy;
+
 var session = require('express-session');
 var flash = require('connect-flash');
 
 var appGlobal = {};
 
-var levelup = require('level')
-var db = levelup('./database/user')
-
 // shared db over the process var until i found another clean solution!
 // THIS IS SCRIPT WHERE SHOULD USE IT OUTSIDE THE EXPRESS ROUTER
 process.db = {};
-process.db.users = db;
 
 appGlobal.db = {}
-appGlobal.db.users = db;
+
+Object.keys(config.get('databases.leveldb.collections')).forEach(function(collection, index){
+
+  collectionName = config.get('databases.leveldb.collections.' + collection).name;
+  
+  db = levelup(path.resolve(__dirname, 'database', collectionName));
+
+  process.db[collection] = db;
+  appGlobal.db[collection] = db;
+
+});
 
 var routes = [];
 
