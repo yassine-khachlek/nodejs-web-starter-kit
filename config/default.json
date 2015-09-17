@@ -6,6 +6,7 @@
 	        "clientID": "FACEBOOK_APP_ID",
 	        "clientSecret": "FACEBOOK_APP_SECRET",
 	        "callbackURL": "https://www.example.com/auth/facebook/callback"
+
 	      }
 	    }
 	  }

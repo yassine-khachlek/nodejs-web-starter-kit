@@ -17,14 +17,6 @@ block content
       p
         //- a.btn.btn-lg.btn-primary(href='../../components/#navbar', role='button') View navbar docs »
 
-  .container-fluid
-    .row
-      .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
-        ul.nav.nav-sidebar
-          each val, index in routes
-            li
-              a(href='/'+val)=val.charAt(0).toUpperCase() + val.slice(1)
-
   //-
     if session
       = JSON.stringify(session)

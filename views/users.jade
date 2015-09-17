@@ -1,0 +1,16 @@
+extends layout
+
+block content
+
+  .container-fluid
+    .row
+
+      .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+        ul.nav.nav-sidebar
+          each val, index in users
+            li
+              
+              a(href='/user/id/'+val.local.id)
+                img(src="/images/1442505618_photo.svg", alt="...", class="img-thumbnail", style='width: 70px;')
+                = ' ' + val.local.displayName
+

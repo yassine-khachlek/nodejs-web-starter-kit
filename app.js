@@ -14,6 +14,17 @@ var flash = require('connect-flash');
 
 var appGlobal = {};
 
+var levelup = require('level')
+var db = levelup('./database/user')
+
+// shared db over the process var until i found another clean solution!
+// THIS IS SCRIPT WHERE SHOULD USE IT OUTSIDE THE EXPRESS ROUTER
+process.db = {};
+process.db.users = db;
+
+appGlobal.db = {}
+appGlobal.db.users = db;
+
 var routes = [];
 var routesFiles = [];
 

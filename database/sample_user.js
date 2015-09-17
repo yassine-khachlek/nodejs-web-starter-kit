@@ -1,42 +1,73 @@
+
 var levelup = require('level')
 
 var db = levelup('./database/user')
 
+var ObjectId = require('../libs/ObjectId.js');
+
 var users = [];
 
-for(i=1;i<10;+i++){
+users.push({
+    local: {
+      'id': ObjectId(), // This should be changed later with an ObjectId
+      'displayName': 'Yassine Khachlek',
+      'username': 'yassine_khachlek',
+      'emails': [{value: 'yassine.khachlek@gmail.com'}],
+      'password': 'password',
+    }
+  });
+
+for(i=1;i<=10;+i++){
   users.push({
-    'id': i,
-    'username': 'username_'+i,
-    'password': 'password_'+i,
+    local: {
+      'id': ObjectId(), // This should be changed later with an ObjectId
+      'displayName': 'username_' + i,
+      'username': 'username_' + i,
+      'emails': [{value: 'email_' + i + '@example.com'}],
+      'password': 'password_' + i,
+    }
   });
 }
 
-// Insert users sample data
+// Gert all usernames from the db
+var usersUsername = [];
 
-users.forEach(function(user, index){
+db.createReadStream({keyEncoding: 'utf8',valueEncoding: 'json',sync: true})
+  .on('data', function (data) {
+    console.log(data.key, '=', data.value);
+    usersUsername.push(data.value.local.username);
+  })
+  .on('error', function (err) {
+    console.log('Oh my!', err)
+  })
+  .on('close', function () {
+    console.log('Stream closed');
 
-  db.get(user.id, function (err, userValue) {
+    // Loop into the created users array
+    users.forEach(function(user, index){
 
-    if (err) { // the key was not found
+      // Insert the user when the username doesn't exist
+      if( usersUsername.indexOf(user.local.username)<0 ){
 
-      console.log('NOT FOUND: ', err);
+        console.log('NOT FOUND: ', user.local.username);
 
-      db.put(user.id, user, {keyEncoding: 'utf8',valueEncoding: 'json',sync: true},function (err) {
-        
-        if (err){ // some kind of I/O error
-          console.log(err);
-        }else{
-          console.log('ADDED', user);
-        }
+        db.put(user.local.id, user, {keyEncoding: 'utf8',valueEncoding: 'json',sync: true},function (err) {
+          
+          if (err){ // some kind of I/O error
+            console.log(err);
+          }else{
+            console.log('ADDED', user);
+          }
 
-      })
+        })
+      
+      }else{
+        console.log('EXIST', user.local.username);
+      }
 
-    }else{
-      console.log('EXIST', userValue);
-    }
+    });
 
   })
-
-});
-
+  .on('end', function () {
+    console.log('Stream end');
+  })
