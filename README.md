@@ -35,7 +35,23 @@ node bin/www
 
 ## Use
 
-Navigate to [http://localhost:3000](http://localhost:3000)
+Navigate to [http://localhost:3000](http://localhost:3000).
+
+See [http://localhost:3000/routes](http://localhost:3000/routes) for available routes.
+
+# Used libraries
+
+## Backend
+
+    express
+    jade
+    level
+    passport
+
+## Front End
+
+	bootstrap
+	jquery
 
 
 ## TODO
