@@ -12,6 +12,7 @@ html
     link(rel='stylesheet', href='/stylesheets/stylesheet.css')
 
     link(rel='stylesheet', href='/stylesheets/login.css')
+    link(rel='stylesheet', href='/stylesheets/sticky-footer.css')
   body
     nav.navbar.navbar-inverse.navbar-fixed-top
       .container
@@ -56,6 +57,10 @@ html
                 =reqFlashSuccess
 
     block content
+
+    footer.footer
+      .container
+        p.text-muted ...
     //-
         img(src='/images/nodejs-light.svg')
         h1 Nodejs Web Starter Kit

@@ -26,19 +26,43 @@ appGlobal.db = {}
 appGlobal.db.users = db;
 
 var routes = [];
-var routesFiles = [];
 
-// Get the list of routes files
-fs.readdirSync(path.resolve(__dirname, 'routes')).forEach(function(fileName) {
-  // Filter *.js
-  if( fileName.split('.')[ fileName.split('.').length-1 ] === 'js' ){
-    routesFiles.push(fileName.split('.')[0]);
-  }
-});
+function buildRoutes(pathDir){
 
-routesFiles.forEach(function(val, index){
-  routes[val] = require('./routes/' + val);
-});
+  // Get the list of routes files
+  fs.readdirSync(pathDir).forEach(function(fileName) {
+    
+    if( fs.statSync(path.resolve(pathDir, fileName)).isFile() ){
+
+      // Filter *.js
+      if( fileName.split('.')[ fileName.split('.').length-1 ] === 'js' ){
+
+        uri = path.resolve(pathDir, fileName);
+        uri = uri.replace(path.resolve(__dirname, 'routes'), '').split('.');
+        uri.pop();
+        uri = uri.join();
+
+        tmp = {
+          'filePath': path.resolve(pathDir, fileName),
+          'uri': uri,
+          'router': require(path.resolve(pathDir, fileName)),
+        };
+
+        routes.push(tmp);
+
+      }
+      
+    }
+
+    if( fs.statSync(path.resolve(pathDir, fileName)).isDirectory() ){
+      buildRoutes(path.resolve(pathDir, fileName));
+    }
+
+  });
+
+}
+
+buildRoutes(path.resolve(__dirname, 'routes'));
 
 var app = express();
 
@@ -67,19 +91,24 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-Object.keys(routes).forEach(function(key){
+routes.forEach(function(val, key){
 
-  // Use the filename as an uri
-  app.use('/'+key, routes[key]);
+  // Use the filepath as an uri
+  app.use(val.uri, val.router);
 
-  // Set index file as a home page at /
-  if( key === 'index' ){
-    app.use('/', routes[key]);
+  // Set the index files as landing page for the folder routes and its subfolders
+  if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
+
+    uri = val.uri.split('/');
+    uri.pop();
+    uri = uri.join('/');
+
+    app.use(uri, val.router);
   }
 
 });
 
-appGlobal.routes = routesFiles
+appGlobal.routes = routes;
 
 app.set('app', appGlobal);
 
