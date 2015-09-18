@@ -52,6 +52,7 @@ See [http://localhost:3000/routes](http://localhost:3000/routes) for available r
 
 	bootstrap
 	jquery
+	Chart.js
 
 
 ## TODO

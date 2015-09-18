@@ -26,9 +26,7 @@ appGlobal.db = {}
 
 Object.keys(config.get('databases.leveldb.collections')).forEach(function(collection, index){
 
-  collectionName = config.get('databases.leveldb.collections.' + collection).name;
-  
-  db = levelup(path.resolve(__dirname, 'database', collectionName));
+  db = levelup(path.resolve(__dirname, 'database', config.get('databases.leveldb.collections.' + collection).name));
 
   process.db[collection] = db;
   appGlobal.db[collection] = db;

@@ -1,24 +1,27 @@
 var express = require('express');
 var router = express.Router();
+var config = require('config');
+
+var collections = [];
+
+Object.keys(config.get('databases.leveldb.collections')).forEach(function(collection, index){
+  
+  collections.push({
+    name: collection,
+    displayName: config.get('databases.leveldb.collections.' + collection).displayName,
+  });
+
+});
 
 router.get('/', function(req, res, next) {
 
   var db = req.app.get('app').db.users;
-  var users = [];
-
-  var collections = [
-    {
-      name: 'user',
-      displayName: 'Users',
-    }
-  ];
 
   res.render('database', { 
     title: 'Express',
     routes: req.app.get('app').routes,
     reqUser: req.user,
     reqFlashSuccess: req.flash('success'),
-    users: users,
     collections: collections,
   });
 
@@ -42,22 +45,17 @@ router.get('/*', function(req, res, next) {
     return
   }
 
-  var collectionName = params[1];
+  var collectionName = params[0];
 
-  var db = req.app.get('app').db.users;
-  var users = [];
+  var db = req.app.get('app').db[collectionName];
 
-  var collections = [
-    {
-      name: 'user',
-      displayName: 'Users',
-    }
-  ];
+  console.log(db);
+  var datas = [];
 
   db.createReadStream({keyEncoding: 'utf8',valueEncoding: 'json',sync: false})
     .on('data', function (data) {
-      delete data.value.local.password;
-      users.push(data.value);
+      //delete data.value.local.password;
+      datas.push(data.value);
     })
     .on('error', function (err) {
       console.log(err)
@@ -71,7 +69,7 @@ router.get('/*', function(req, res, next) {
   	    routes: req.app.get('app').routes,
   	    reqUser: req.user,
   	    reqFlashSuccess: req.flash('success'),
-  	    users: users,
+  	    datas: datas,
         collections: collections,
   	  });
 

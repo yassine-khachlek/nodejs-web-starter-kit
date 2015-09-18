@@ -11,12 +11,9 @@ block content
               a(href='/database/'+collection.name)=collection.displayName.charAt(0).toUpperCase() + collection.displayName.slice(1)
 
       .col-xs-12.col-sm-9.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
-
-        each user, index in users
-          pre(style='white-space: pre;')
-            code
-              = JSON.stringify(user, '', '  ')
-
-
-
-
+        if datas
+          each data, index in datas
+            pre(style='white-space: pre;')
+              code
+                = JSON.stringify(data, '', '  ')
+        

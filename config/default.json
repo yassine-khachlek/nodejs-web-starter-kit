@@ -13,9 +13,18 @@
   "databases": {
   	"leveldb": {
   		"collections": {
-  			"users": {
-  				"name": "user"
-  			}
+  			"users": { // this what should be used to call the collection programmatically
+  				"name": "user", // this is the real path name
+          "displayName": "users" // this is the display name
+  			},
+        "roles": {
+          "name": "role",
+          "displayName": "roles"
+        },
+        "posts": {
+          "name": "post",
+          "displayName": "posts"
+        }        
   		}
   	}
   }

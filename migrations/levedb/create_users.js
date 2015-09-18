@@ -3,7 +3,7 @@ var levelup = require('level')
 
 var db = levelup('./database/user')
 
-var ObjectId = require('../libs/ObjectId.js');
+var ObjectId = require('../../libs/ObjectId.js');
 
 var users = [];
 
