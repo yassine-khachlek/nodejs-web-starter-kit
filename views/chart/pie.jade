@@ -14,49 +14,19 @@ block content
                 a(href=val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)
 
       .col-xs-12.col-sm-9.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
-        
-        h1= 'All Charts'
-        
+
         .row
 
-          .col-xs-12.col-sm-6.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0            
-            
-            canvas#myLineChartCtx(style='width: 100%').img-thumbnail
+          .col-xs-12.col-sm-12.col-md-12.col-lg-12.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
 
-          .col-xs-12.col-sm-6.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0            
-            
-            canvas#myBarChartCtx(style='width: 100%').img-thumbnail
+            h1= 'Pie Chart'
 
-          .col-xs-12.col-sm-6.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0  
-
-            canvas#myRadarChartCtx(style='width: 100%').img-thumbnail
-
-          .col-xs-12.col-sm-6.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0  
-
-            canvas#myPolarAreaCtx(style='width: 100%').img-thumbnail
-          
-          .col-xs-12.col-sm-6.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0  
-          
             canvas#myPieChartCtx(style='width: 100%').img-thumbnail
-
-          .col-xs-12.col-sm-6.col-md-6.col-lg-6.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0  
-
-            canvas#myDoughnutChartCtx(style='width: 100%').img-thumbnail
 
             script(type='text/javascript').
               
               // Get context with jQuery - using jQuery's .get() method.
-              var myLineChartCtx = $("#myLineChartCtx").get(0).getContext("2d");
-              
-              var myBarChartCtx = $("#myBarChartCtx").get(0).getContext("2d");
-
-              var myRadarChartCtx = $("#myRadarChartCtx").get(0).getContext("2d");
-
-              var myPolarAreaCtx = $("#myPolarAreaCtx").get(0).getContext("2d");
-
               var myPieChartCtx = $("#myPieChartCtx").get(0).getContext("2d");
-
-              var myDoughnutChartCtx = $("#myDoughnutChartCtx").get(0).getContext("2d");
 
               Chart.defaults.global = {
                   // Boolean - Whether to animate the chart
@@ -192,32 +162,6 @@ block content
 
               Chart.defaults.global.responsive = true;
 
-              var data = {
-                  labels: ["January", "February", "March", "April", "May", "June", "July"],
-                  datasets: [
-                      {
-                          label: "My First dataset",
-                          fillColor: "rgba(220,220,220,0.2)",
-                          strokeColor: "rgba(220,220,220,1)",
-                          pointColor: "rgba(220,220,220,1)",
-                          pointStrokeColor: "#fff",
-                          pointHighlightFill: "#fff",
-                          pointHighlightStroke: "rgba(220,220,220,1)",
-                          data: [65, 59, 80, 81, 56, 55, 40]
-                      },
-                      {
-                          label: "My Second dataset",
-                          fillColor: "rgba(151,187,205,0.2)",
-                          strokeColor: "rgba(151,187,205,1)",
-                          pointColor: "rgba(151,187,205,1)",
-                          pointStrokeColor: "#fff",
-                          pointHighlightFill: "#fff",
-                          pointHighlightStroke: "rgba(151,187,205,1)",
-                          data: [28, 48, 40, 19, 86, 27, 90]
-                      }
-                  ]
-              };
-
               var options = {
 
                 ///Boolean - Whether grid lines are shown across the chart
@@ -267,12 +211,6 @@ block content
 
               };
 
-              var myLineChart = new Chart(myLineChartCtx).Line(data, options);
-
-              var myBarChart = new Chart(myBarChartCtx).Bar(data, options);
-
-              var myRadarChart = new Chart(myRadarChartCtx).Radar(data, options);
-
               var data = [
                   {
                       value: 300,
@@ -307,9 +245,4 @@ block content
 
               ];
 
-              var myPolarArea = new Chart(myPolarAreaCtx).PolarArea(data, options);
-
               var myPieChart = new Chart(myPieChartCtx).Pie(data,options);
-
-              // And for a doughnut chart
-              var myDoughnutChart = new Chart(myDoughnutChartCtx).Doughnut(data,options);

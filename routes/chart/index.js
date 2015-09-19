@@ -1,7 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 
 var charts = [
+	{
+		uri: 'index',
+	},	
 	{
 		uri: 'line',
 	},
@@ -24,7 +28,7 @@ var charts = [
 
 router.get('/', function(req, res, next) {
 
-  res.render('chart/'+'index', { 
+  res.render('chart/index', { 
   	title: 'Express',
   	routes: req.app.get('app').routes,
   	reqUser: req.user,
@@ -55,7 +59,7 @@ router.get('/*', function(req, res, next) {
 
   var chartName = params[0];
 
-  res.render('chart/'+'index', { 
+  res.render('chart/'+chartName, { 
   	title: 'Express',
   	routes: req.app.get('app').routes,
   	reqUser: req.user,
