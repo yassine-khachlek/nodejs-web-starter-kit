@@ -4,7 +4,7 @@ var db = levelup('./database/language')
 
 var ObjectId = require('../../libs/ObjectId.js');
 
-var langs = {
+var languagesObj = {
     "ab":{
         "name":"Abkhaz",
         "nativeName":"аҧсуа"
@@ -737,7 +737,7 @@ var langs = {
 
 var languages = [];
 
-Object.keys(langs).forEach(function(lang){
+Object.keys(languagesObj).forEach(function(lang){
   languages.push({
       'id': ObjectId(),
       'iso': {
@@ -745,8 +745,8 @@ Object.keys(langs).forEach(function(lang){
       		'1': lang,
       	}
       },
-      'name': langs[lang].name,
-      'nativeName': langs[lang].nativeName,
+      'name': languagesObj[lang].name,
+      'nativeName': languagesObj[lang].nativeName,
   });
 });
 

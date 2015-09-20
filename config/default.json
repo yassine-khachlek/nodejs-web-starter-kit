@@ -28,6 +28,10 @@
         "languages": {
           "name": "language",
           "displayName": "languages"
+        },
+        "countries": {
+          "name": "country",
+          "displayName": "countries"
         }
   		}
   	}
