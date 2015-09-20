@@ -9,7 +9,7 @@ var users = [];
 
 users.push({
     local: {
-      'id': ObjectId(), // This should be changed later with an ObjectId
+      'id': ObjectId(),
       'displayName': 'Yassine Khachlek',
       'username': 'yassine_khachlek',
       'emails': [{value: 'yassine.khachlek@gmail.com'}],
@@ -20,7 +20,7 @@ users.push({
 for(i=1;i<=10;+i++){
   users.push({
     local: {
-      'id': ObjectId(), // This should be changed later with an ObjectId
+      'id': ObjectId(),
       'displayName': 'username_' + i,
       'username': 'username_' + i,
       'emails': [{value: 'email_' + i + '@example.com'}],

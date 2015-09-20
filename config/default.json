@@ -24,7 +24,11 @@
         "posts": {
           "name": "post",
           "displayName": "posts"
-        }        
+        },
+        "languages": {
+          "name": "language",
+          "displayName": "languages"
+        }
   		}
   	}
   }
