@@ -32,7 +32,11 @@
         "countries": {
           "name": "country",
           "displayName": "countries"
-        }
+        },
+        "currencies": {
+          "name": "currency",
+          "displayName": "currencies"
+        }        
   		}
   	}
   }

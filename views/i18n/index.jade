@@ -47,3 +47,22 @@ block content
                      div.flag(class=country.iso['3166']['1']['alpha']['2'].toLowerCase())
                  td= country.name
                  td= country.iso['3166']['1']['alpha']['2']
+
+          if currencies
+            //- table.table.table-hover.table-condensed
+            table.table.table-hover
+              thead
+                tr
+                  th #
+                  th NAME
+                  th ISO 4217 CODE
+                  th COUNTRY FLAG
+              tbody
+              each currency, index in currencies
+                tr
+                 td= currency.id
+                 td= currency.name
+                 td= currency.iso['4217'].code
+                 td
+                   div.f32
+                     div.flag(class=currency.country.iso['3166']['1']['alpha']['2'].toLowerCase())
