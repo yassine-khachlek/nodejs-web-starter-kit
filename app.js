@@ -12,10 +12,19 @@ var mongooseSchema = mongoose.Schema;
 
 var mongooseConnectionUri = 'mongodb://'+config.get('databases.mongodb.host')+':'+config.get('databases.mongodb.port')+'/'+config.get('databases.mongodb.db');
 var mongooseConnectionOptions = config.get('databases.mongodb.connectionOptions');
-var mongooseConnection = mongoose.connect(mongooseConnectionUri, mongooseConnectionOptions, function(err){
-  // if (err) throw err;
-  if (err) return console.error(err);
-});
+var mongooseConnection = {};
+var mongooseConnectWithRetry = function() {
+  mongooseConnection = mongoose.connect(mongooseConnectionUri, mongooseConnectionOptions, function(err){
+    // if (err) throw err;
+    if (err) {
+      console.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+      setTimeout(mongooseConnectWithRetry, 5000);
+    }else{
+      console.error('Connected to mongodb.');
+    }
+  });
+};
+mongooseConnectWithRetry();
 
 var appGlobal = {};
 appGlobal.db = {};
