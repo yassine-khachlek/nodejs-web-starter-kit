@@ -7,7 +7,35 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var config = require('config');
 
-var levelup = require('level')
+var mongoose = require('mongoose');
+var mongooseSchema = mongoose.Schema;
+
+var mongooseConnectionUri = 'mongodb://'+config.get('databases.mongodb.host')+':'+config.get('databases.mongodb.port')+'/'+config.get('databases.mongodb.db');
+var mongooseConnectionOptions = config.get('databases.mongodb.connectionOptions');
+var mongooseConnection = mongoose.connect(mongooseConnectionUri, mongooseConnectionOptions, function(err){
+  // if (err) throw err;
+  if (err) return console.error(err);
+});
+
+var appGlobal = {};
+appGlobal.db = {};
+appGlobal.mongodb = {};
+appGlobal.mongodb.databases = {};
+appGlobal.mongodb.databases[config.get('databases.mongodb.db')] = {};
+
+Object.keys(config.get('databases.mongodb.collections')).forEach(function(collection, index){
+  
+  appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection] = {};
+  appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection].schema = new mongooseSchema(config.get('databases.mongodb.collections.' + collection).schema, config.get('databases.mongodb.collections.' + collection).schemaOptions);
+  appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection].model = mongoose.model(config.get('databases.mongodb.collections.' + collection).name, appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection].schema);
+
+});
+
+// shared db over the process var until i found another clean solution!
+// THIS IS SCRIPT WHERE SHOULD USE IT OUTSIDE THE EXPRESS ROUTER
+process.db = {};
+
+var levelup = require('level');
 
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy
@@ -15,14 +43,6 @@ var passport = require('passport')
 
 var session = require('express-session');
 var flash = require('connect-flash');
-
-var appGlobal = {};
-
-// shared db over the process var until i found another clean solution!
-// THIS IS SCRIPT WHERE SHOULD USE IT OUTSIDE THE EXPRESS ROUTER
-process.db = {};
-
-appGlobal.db = {}
 
 Object.keys(config.get('databases.leveldb.collections')).forEach(function(collection, index){
 

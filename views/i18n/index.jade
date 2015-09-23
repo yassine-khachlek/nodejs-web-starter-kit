@@ -56,6 +56,7 @@ block content
                   th #
                   th NAME
                   th ISO 4217 CODE
+                  th COUNTRY ISO 3166-1 ALPHA 2
                   th COUNTRY FLAG
               tbody
               each currency, index in currencies
@@ -63,6 +64,7 @@ block content
                  td= currency.id
                  td= currency.name
                  td= currency.iso['4217'].code
+                 td= currency.country.iso['3166']['1']['alpha']['2']
                  td
                    div.f32
                      div.flag(class=currency.country.iso['3166']['1']['alpha']['2'].toLowerCase())

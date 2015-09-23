@@ -11,6 +11,44 @@
 	  }
   },
   "databases": {
+
+    "mongodb": {
+      "host": "localhost",
+      "port": "27017", // Default MongoDB portr
+      "db": "myapp", // db name
+      "connectionOptions": {
+        "db": { 
+          "native_parser": true
+        },
+        "server": { 
+          "poolSize": 5 
+        },
+        "replset": { 
+          "rs_name": "myReplicaSetName" 
+        },
+        "user": "",
+        "pass": "" 
+      },
+      "collections": {
+        "currenciesQuotes": {
+          "name": "currenciesQuotes",
+          "schema": {
+            "change": "Number",
+            "chg_percent": "Number",
+            "name": "String",
+            "price": "Number",
+            "symbol": "String",
+            "ts": "Number",
+            "type": "String",
+            "utctime": { "type": "Date" },
+            "volume": "Number"
+          },
+          "schemaOptions": { "strict": false },
+          "displayName": "currencies quotes"
+        }
+      }
+    },
+
   	"leveldb": {
   		"collections": {
   			"users": { // this what should be used to call the collection programmatically
@@ -39,5 +77,6 @@
         }        
   		}
   	}
+
   }
 }
