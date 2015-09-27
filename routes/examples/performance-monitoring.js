@@ -4,7 +4,7 @@ var path = require('path');
 
 router.get('/', function(req, res, next) {
 
-  res.render('gauge/index', { 
+  res.render('examples/performance-monitoring', { 
   	title: 'Express',
   	routes: req.app.get('app').routes,
   	reqUser: req.user,

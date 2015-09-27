@@ -27,7 +27,7 @@ var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
 
-var IO = require('../libs/io.js')(io);
+var IO = require('../libs/performance-monitoring.js')(io);
 
 
 /**

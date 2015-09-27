@@ -114,6 +114,11 @@ buildRoutes(path.resolve(__dirname, 'routes'));
 
 var app = express();
 
+// Set the basedir for views let me use extends /layout,
+// so no problem when moving the views files inside subfolders,
+// and relative layout path is still working.
+app.locals.basedir = path.join(__dirname, 'views');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
