@@ -13,13 +13,22 @@ var http = require('http');
  */
 
 var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
+
+/**
+ * Create SOCKET server attached to server
+ * This will make socket.io use the same port with express
+ */
+var io = require('socket.io').listen(server);
+
+
+var IO = require('../libs/io.js')(io);
+
 
 /**
  * Listen on provided port, on all network interfaces.

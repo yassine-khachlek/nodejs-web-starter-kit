@@ -6,7 +6,18 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var config = require('config');
+/*
+var io = require('socket.io');
 
+io.on('connection', function (socket) {
+  socket.emit('gaugeValue', { hello: 'world' });
+  
+  //socket.on('my other event', function (data) {
+  //  console.log(data);
+  //});
+  
+});
+*/
 var mongoose = require('mongoose');
 var mongooseSchema = mongoose.Schema;
 
