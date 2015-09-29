@@ -6,18 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var config = require('config');
-/*
-var io = require('socket.io');
 
-io.on('connection', function (socket) {
-  socket.emit('gaugeValue', { hello: 'world' });
-  
-  //socket.on('my other event', function (data) {
-  //  console.log(data);
-  //});
-  
-});
-*/
 var mongoose = require('mongoose');
 var mongooseSchema = mongoose.Schema;
 
@@ -73,9 +62,42 @@ Object.keys(config.get('databases.leveldb.collections')).forEach(function(collec
 
 });
 
-var routes = [];
+var app = express();
 
-function buildRoutes(pathDir){
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+// Set the basedir for views let me use extends /layout,
+// so no problem when moving the views files inside subfolders,
+// and relative layout path is still working.
+app.locals.basedir = path.join(__dirname, 'views');
+
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // NOT WORKING WITH enctype="multipart/form-data"
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Needed for passport seesion and flash messages
+app.use(session({ secret: 'veryverysecretsecret', cookie: { maxAge: 1000*60*60*24 } })); // One day
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+function buildRoutes(pathDir, routes){
+
+  if(!routes){
+    var routes = [];
+  }
 
   // Get the list of routes files
   fs.readdirSync(pathDir).forEach(function(fileName) {
@@ -103,66 +125,113 @@ function buildRoutes(pathDir){
     }
 
     if( fs.statSync(path.resolve(pathDir, fileName)).isDirectory() ){
-      buildRoutes(path.resolve(pathDir, fileName));
+      buildRoutes(path.resolve(pathDir, fileName), routes);
     }
 
   });
 
+  return routes;
+
 }
 
-buildRoutes(path.resolve(__dirname, 'routes'));
-
-var app = express();
-
-// Set the basedir for views let me use extends /layout,
-// so no problem when moving the views files inside subfolders,
-// and relative layout path is still working.
-app.locals.basedir = path.join(__dirname, 'views');
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); // NOT WORKING WITH enctype="multipart/form-data"
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Needed for passport seesion and flash messages
-app.use(session({ secret: 'veryverysecretsecret', cookie: { maxAge: 1000*60*60*24 } })); // One day
-app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
+var routes = buildRoutes(path.resolve(__dirname, 'routes'));
 
 routes.forEach(function(val, key){
-
   // Use the filepath as an uri
   app.use(val.uri, val.router);
-
   // Set the index files as landing page for the folder routes and its subfolders
   if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
-
     uri = val.uri.split('/');
     uri.pop();
     uri = uri.join('/');
-
     app.use(uri, val.router);
   }
-
 });
 
+
+function buildPackages(pathDir, packages){
+
+  if(!packages){
+    var packages = [];
+  }
+
+  // Get the list of routes files
+  fs.readdirSync(pathDir).forEach(function(fileName) {
+
+    var packageName = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[0];
+    var insideThePackageRootesFolder = ( path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[1] == 'routes' );
+
+    // Have a package name && inside the package rooutes folder
+    if( packageName && insideThePackageRootesFolder ){
+
+      if( fs.statSync(path.resolve(pathDir, fileName)).isFile() ){
+
+        // Filter *.js
+        if( fileName.split('.')[ fileName.split('.').length-1 ] === 'js' ){
+
+          uri = path.resolve(pathDir, fileName);
+          uri = uri.replace(path.resolve(__dirname, 'packages'), '').split('.');
+          uri.pop();
+          uri = uri.join();
+
+          // the routes folder name from the uri
+          uri = '/' + packageName + uri.substring(('/' + packageName + '/routes').length, uri.length);
+
+          tmp = {
+            'filePath': path.resolve(pathDir, fileName),
+            'uri': uri,
+            'router': require(path.resolve(pathDir, fileName)),
+          };
+
+          packages.push(tmp);
+
+        }
+        
+      }
+      
+    }
+
+    if( fs.statSync(path.resolve(pathDir, fileName)).isDirectory() ){
+
+      var folderPath = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/');
+
+      // Explore the packages root and subfolder named routes
+      if( !folderPath[1] || folderPath[1] == 'routes' ){
+        buildPackages(path.resolve(pathDir, fileName), packages);
+      }
+      
+    }
+
+  });
+
+  return packages;
+
+}
+
+var packages = buildPackages(path.resolve(__dirname, 'packages'));
+
+packages.forEach(function(val, key){
+
+  // add packages routes to routes
+  routes.push(val);
+
+  // Use the filepath as an uri
+  app.use(val.uri, val.router);
+  // Set the index files as landing page for the folder routes and its subfolders
+  if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
+    uri = val.uri.split('/');
+    uri.pop();
+    uri = uri.join('/');
+    app.use(uri, val.router);
+  }
+});
+
+// add routes to the shared object
 appGlobal.routes = routes;
 
+// share app object with all express routers
+// so later it can be available using using
+// req.app.get('app').something
 app.set('app', appGlobal);
 
 // catch 404 and forward to error handler
