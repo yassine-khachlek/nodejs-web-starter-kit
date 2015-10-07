@@ -1,0 +1,33 @@
+{
+
+  
+  "default": "mongodb",
+
+  "connections": {
+
+    "mongodb": {
+
+      "host": "localhost",
+      "port": "27017",
+      "database": "myapp",
+      
+      "connectionOptions": {
+        "db": {
+          "native_parser": true
+        },
+        "server": {
+          "poolSize": 5
+        },
+        "replset": {
+          "rs_name": "myReplicaSetName"
+        },
+        "user": "",
+        "pass": ""
+
+      }
+
+    }
+
+  }
+
+}

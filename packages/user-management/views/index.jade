@@ -1,0 +1,39 @@
+extends /layout
+
+block content
+
+  .container-fluid
+    .row
+      .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1.sidebar
+        ul.nav.nav-sidebar
+          each val, index in routes
+            li
+              //-a(href=val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)
+
+      .col-xs-12.col-sm-9.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
+
+        h1 User Management
+        
+        .table-responsive
+
+          table.table.table-hover
+
+            thead
+
+              tr
+                th #
+                th Name
+                th Username
+                th Email
+
+            tbody
+              
+              if users
+                 
+                each val, index in users
+
+                  tr
+                    td= val.id
+                    td= val.name.first + ' ' + val.name.last
+                    td= val.username
+                    td= val.email

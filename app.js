@@ -10,8 +10,17 @@ var config = require('config');
 var mongoose = require('mongoose');
 var mongooseSchema = mongoose.Schema;
 
-var mongooseConnectionUri = 'mongodb://'+config.get('databases.mongodb.host')+':'+config.get('databases.mongodb.port')+'/'+config.get('databases.mongodb.db');
-var mongooseConnectionOptions = config.get('databases.mongodb.connectionOptions');
+var appGlobal = {};
+
+appGlobal.config = {};
+
+// Load the database configuration
+var databaseConfig = JSON.parse( fs.readFileSync( path.resolve(__dirname, 'config', 'database.json') ).toString() );
+
+appGlobal.config.database = databaseConfig;
+
+var mongooseConnectionUri = 'mongodb://'+databaseConfig.connections[databaseConfig.default].host+':'+databaseConfig.connections[databaseConfig.default].port+'/'+databaseConfig.connections[databaseConfig.default].database;
+var mongooseConnectionOptions = databaseConfig.connections[databaseConfig.default].connectionOptions;
 var mongooseConnection = {};
 var mongooseConnectWithRetry = function() {
   mongooseConnection = mongoose.connect(mongooseConnectionUri, mongooseConnectionOptions, function(err){
@@ -26,12 +35,46 @@ var mongooseConnectWithRetry = function() {
 };
 mongooseConnectWithRetry();
 
-var appGlobal = {};
-appGlobal.db = {};
-appGlobal.mongodb = {};
-appGlobal.mongodb.databases = {};
-appGlobal.mongodb.databases[config.get('databases.mongodb.db')] = {};
+// req.app.get('app').database[databaseName][collectionName]
+// req.app.get('app').database[databaseName][collectionName].shema
+// req.app.get('app').database[databaseName][collectionName].model
+appGlobal.database = {};
+appGlobal.database[ databaseConfig.connections[databaseConfig.default].database ] = {};
 
+appGlobal.database[ databaseConfig.connections[databaseConfig.default].database ].users = {};
+
+appGlobal.database[ databaseConfig.connections[databaseConfig.default].database ].users.shema = new mongooseSchema(
+  
+  // schema
+  {
+    "name": {
+      "first": String,
+      "last": String,
+    },
+    "username": String,
+    "email": String,
+    "password": String
+  },
+  
+  // schemaOptions
+  { "strict": false }
+
+);
+appGlobal.database[ databaseConfig.connections[databaseConfig.default].database ].users.model = mongoose.model('user', 
+
+  {
+    "name": {
+      "first": String,
+      "last": String,
+    },
+    "username": String,
+    "email": String,
+    "password": String
+  }
+
+);
+
+/*
 Object.keys(config.get('databases.mongodb.collections')).forEach(function(collection, index){
   
   appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection] = {};
@@ -39,6 +82,8 @@ Object.keys(config.get('databases.mongodb.collections')).forEach(function(collec
   appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection].model = mongoose.model(config.get('databases.mongodb.collections.' + collection).name, appGlobal.mongodb.databases[config.get('databases.mongodb.db')][collection].schema);
 
 });
+*/
+
 
 // shared db over the process var until i found another clean solution!
 // THIS IS SCRIPT WHERE SHOULD USE IT OUTSIDE THE EXPRESS ROUTER
@@ -55,11 +100,14 @@ var flash = require('connect-flash');
 
 Object.keys(config.get('databases.leveldb.collections')).forEach(function(collection, index){
 
+/*
   db = levelup(path.resolve(__dirname, 'database', config.get('databases.leveldb.collections.' + collection).name));
 
   process.db[collection] = db;
-  appGlobal.db[collection] = db;
+  //appGlobal.db[collection] = db;
 
+  appGlobal.database[ Object.keys(appGlobal.database)[0] ] = db;
+*/
 });
 
 var app = express();

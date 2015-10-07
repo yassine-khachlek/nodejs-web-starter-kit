@@ -16,19 +16,7 @@
       "host": "localhost",
       "port": "27017", // Default MongoDB portr
       "db": "myapp", // db name
-      "connectionOptions": {
-        "db": { 
-          "native_parser": true
-        },
-        "server": { 
-          "poolSize": 5 
-        },
-        "replset": { 
-          "rs_name": "myReplicaSetName" 
-        },
-        "user": "",
-        "pass": "" 
-      },
+
       "collections": {
         "currenciesQuotes": {
           "name": "currenciesQuotes",
@@ -45,7 +33,19 @@
           },
           "schemaOptions": { "strict": false },
           "displayName": "currencies quotes"
-        }
+        },
+        "users": {
+          "name": "users",
+          "schema": {
+            "firstName": "String",
+            "lastName": "String",
+            "username": "String",
+            "email": "String",
+            "password": "String"
+          },
+          "schemaOptions": { "strict": false },
+          "displayName": "users collection"
+        }        
       }
     },
 
