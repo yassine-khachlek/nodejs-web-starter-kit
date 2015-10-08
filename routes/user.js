@@ -21,9 +21,10 @@ router.get('/*', function(req, res, next) {
 
   var userId = params[1];
 
-  var db = req.app.get('app').db.users;
+  var User = req.app.get('app').database.default.users.model;
 
-  db.get(userId, {keyEncoding: 'utf8',valueEncoding: 'json',sync: false}, function (err, value) {
+  User.findById(userId, function(err, user) {
+    
     if (err) {
 
       if (err.notFound) {
@@ -41,7 +42,10 @@ router.get('/*', function(req, res, next) {
       
     }
 
-    delete value.local.password;
+    if( user && user.local ){
+      delete user.local.password;
+    }
+    
 
     // .. handle `value` here
     res.render('user', { 
@@ -49,14 +53,10 @@ router.get('/*', function(req, res, next) {
       routes: req.app.get('app').routes,
       reqUser: req.user,
       reqFlashSuccess: req.flash('success'),
-      user: value,     
+      user: user,     
     });
 
-  })
-
-    
-    
-
+  });
 
 });
 

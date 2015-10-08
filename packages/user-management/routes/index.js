@@ -4,7 +4,8 @@ var path = require('path');
 
 router.get('/', function(req, res, next) {
 
-  var userModel = req.app.get('app').database[ req.app.get('app').config.database.connections[ req.app.get('app').config.database.default ].database ].users.model;
+
+  var userModel = req.app.get('app').database.default.users.model;
 
   var query = userModel.find();
 

@@ -1,9 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var config = require('config');
-
-// shared db over the process var until i found another clean solution!
-db = process.db.users;
 
 var ObjectId = require('../../../libs/ObjectId.js');
 

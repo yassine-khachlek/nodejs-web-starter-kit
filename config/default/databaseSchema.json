@@ -1,0 +1,20 @@
+{
+  
+  "users": {
+
+    "schema": {
+    	"local": {},
+    	"facebook": {}
+    },
+
+    "schemaOptions": {
+      "collection": "users",
+      "_id": false,
+      "minimize": false,
+      "safe": true,
+      "strict": false
+    }
+
+  }
+
+}

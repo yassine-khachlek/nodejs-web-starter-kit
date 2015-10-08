@@ -1,12 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var config = require('config');
-
 var https = require('https');
 var querystring = require('querystring');
 
 // shared db over the process var until i found another clean solution!
-db = process.db.users;
+var User = process.database.default.users.model;
 
 var ObjectId = require('../../../libs/ObjectId.js');
 
@@ -14,9 +12,9 @@ var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new FacebookStrategy({
-    clientID: config.get('authentication.passport.strategy.facebook.clientID'),
-    clientSecret: config.get('authentication.passport.strategy.facebook.clientSecret'),
-    callbackURL: config.get('authentication.passport.strategy.facebook.callbackURL'),
+    clientID: process.auth.passport.strategy.facebook.clientID,
+    clientSecret: process.auth.passport.strategy.facebook.clientSecret,
+    callbackURL: process.auth.passport.strategy.facebook.callbackURL,
     profileFields: ['id','displayName','name','emails','photos'],
   },
   function(accessToken, refreshToken, profile, done) {
@@ -79,122 +77,86 @@ passport.use(new FacebookStrategy({
       req.end();
     
     }else{
-    
-      User = false;
-      UserID = false;
-      providerId = false;
-      providerEmail = false;
 
-      // Search for user using the provider data id and primary email
-      db.createReadStream({keyEncoding: 'utf8',valueEncoding: 'json',sync: false})
-        .on('data', function (data) {
 
-          // Verify the user provider id
-          if( data.value[profile.provider] && data.value[profile.provider].id && data.value[profile.provider].id == profile.id ) {
-            User = data.value;
-            UserID = data.key;
-            providerId = true;
-          }
+      // Search for user using the provider id
+      User.findOne({'facebook.id': profile.id}, function(err, user) {
 
-          // Verify the user provider email and the local email
-          data.value.local.emails.forEach(function(email, key){
+        if (err) { return done(err); }
 
-            if( email.value == profile.emails[0].value ){
-              User = data.value;
-              UserID = data.key;
-              providerEmail = true;
-            }
+        if (!user) {
 
-          });
+          // Search for user using the provider email
+          User.findOne({'local.emails.0.value': profile.emails[0].value}, function(err, user) {
 
-        })
-        .on('error', function (err) {
-          console.log(err)
-        })
-        .on('close', function () {
-        })
-        .on('end', function () {
+            if (err) { return done(err); }
 
-          // User not found, create it
-          if( !User ){
-            
-            User = {
-              local: JSON.parse(JSON.stringify(profile)), // Clone the object profile
-              facebook: JSON.parse(JSON.stringify(profile)), // Clone the object profile
-            };
+            // provider email not found, create a new user
+            if (!user) {
 
-            // Set the user local id, only when created
-            // the same local id is used as a key
-            User.local.id = ObjectId();
+              var newUserData = {
+                local: JSON.parse(JSON.stringify(profile)), // Clone the object profile
+                facebook: JSON.parse(JSON.stringify(profile)) // Clone the object profile
+              };
 
-            // Insert the created user
-            db.put(User.local.id, User, {keyEncoding: 'utf8',valueEncoding: 'json',sync: false},function (err) {
-              if (err){ // some kind of I/O error
-                console.log(err);
-              }else{
-                console.log('ADDED', User);
-              }
-            })
+              var newUserModel = new User(newUserData);
 
-            // Delete sensitive user data before serialization
-            delete User.local.password;
+              // Insert the new user
+              newUserModel.save(function (err) {
+                
+                if (err){ // some kind of I/O error
 
-            done(null, User);
+                  console.log(err);
 
-          }else{
-            
-            // This mean that the account is present with both 
-            // provider profile and local profile
-            if( providerId && providerEmail ){
+                  if (err) { return done(err); }
 
-              // Nothing to do just return the user
-              // and also if the provider email was changed,
-              // we are using the provider id so no problem there
-              
-              // Delete sensitive user data before serialization
-              delete User.local.password;
-              
-              done(null, User);
+                }else{
+
+                  User.findById(newUserModel, function (err, newUser) {
+                    if (err) { return done(err); }
+                    done(null, newUser);
+                  })
+
+                }
+
+              })
 
             }else{
+              
+              // provider id not found but provider email found in local account
+              // update the provider data
 
-              // The provider id was found, but not
-              // the local account with the provider email
-              // update the local account (populate it by the provider data)
-              // later, the user can create his password, username, ...
-              // to that time, he will be able to connect just with the provider
-              // in this case facebook
-              if( providerId && !providerEmail ){
-                User.local = User.facebook;
-                // Set the user local id using the key
-                User.local.id = UserID;
-              }
+              user.facebook = profile;
 
-              // The user local data was found but not the provider data
-              // so just update the provider data
-              if( !providerId && providerEmail ){
-                User.facebook = profile;
-              }
-
-              // Update data
-              db.put(User.local.id, User, {keyEncoding: 'utf8',valueEncoding: 'json',sync: false},function (err) {
+              user.save(function (err) {
+                
                 if (err){ // some kind of I/O error
+
                   console.log(err);
+
+                  if (err) { return done(err); }
+
                 }else{
-                  console.log('UPDATED: ', User);
+
+                  User.findById(user, function (err, updatedUser) {
+                    if (err) { return done(err); }
+                    done(null, updatedUser);
+                  })
+
                 }
-              }) 
 
-              // Delete sensitive user data before serialization
-              delete User.local.password;
-
-              done(null, User);
+              })
 
             }
 
-          }
+          }); 
 
-        })
+        }else{
+          // provider id found, return the user
+          done(null, user);
+        }
+
+      });      
         
     }
 

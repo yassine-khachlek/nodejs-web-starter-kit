@@ -6,7 +6,7 @@ node_modules
 public/components
 
 # Config
-config/production.json
+config/production
 
 # Runtime data
 pids

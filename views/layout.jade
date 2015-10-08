@@ -50,7 +50,7 @@ html
               ul.dropdown-menu
                 li
                   if reqUser
-                    a(href='/user/id/' + reqUser.local.id) Profile
+                    a(href='/user/id/' + reqUser._id) Profile
                     a(href='/auth/logout') Logout
                   else
                     a(href='/auth') Log in

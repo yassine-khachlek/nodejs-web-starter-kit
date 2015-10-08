@@ -1,9 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var config = require('config');
 
-// shared db over the process var until i found another clean solution!
-db = process.db.users;
+// shared database over the process var until i found another clean solution!
+var User = process.database.default.users.model;
+
+var isValidPassword = function(user, password){
+  return (user.local.password == password);
+}
 
 var passport = require('passport')
   , LocalStrategy = require('passport-local').Strategy;
@@ -13,59 +16,28 @@ passport.use(new LocalStrategy({
     passwordField: 'password'
   },
   function(username, password, done) {
-    /*
-    User.findOne({ username: username }, function(err, user) {
+    
+    var queryObj = { 'local.username': username };
+       
+    // Check the username if it's a username or an email
+    var re = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  
+    if( re.test(username) ){
+      var queryObj = { 'local.emails.0.value': username };
+    }
+
+    User.findOne(queryObj, function(err, user) {
       if (err) { return done(err); }
+      console.log(user);
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!user.validPassword(password)) {
+      if (!isValidPassword(user, password)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
     });
-    */
-    User = false;
-    db.createReadStream({keyEncoding: 'utf8',valueEncoding: 'json',sync: false})
-      .on('data', function (data) {
-        //console.log(data.key, '=', data.value);
-        
-        // Verify if username is a username or email
-        var re = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  
-        if( re.test(username) ){
-  
-          data.value.local.emails.forEach(function(email, key){
-
-            if( email.value == username && data.value.local.password == password ){
-      
-              User = data.value;
-            }
-
-          });
-  
-        }else{
-
-          if( data.value.local.username == username && data.value.local.password == password ){
-            User = data.value;
-          }
-  
-        }
-  
-      })
-      .on('error', function (err) {
-        console.log(err)
-      })
-      .on('close', function () {
-      })
-      .on('end', function () {
-        if( !User ){
-          return done(null, false, { message: 'Invalid username or password.' });
-        }
-        // Delete sensitive user data before serialization
-        delete User.local.password;
-        return done(null, User);
-      })
+    
   }
 ));
 
