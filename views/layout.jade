@@ -1,25 +1,38 @@
 doctype html
-html
+html(ng-app="mainModule", ng-controller="homeController")
   head
-    title= title
-    
-    script(src='/components/jquery/dist/jquery.min.js')
 
-    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap.min.css')
-    link(rel='stylesheet', href='/components/bootstrap/dist/css/bootstrap-theme.min.css')
-    script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+
+    if base
+      base(href=base)
+    else
+      base(href='/')
+    
+    if title
+      title= title.charAt(0).toUpperCase() + title.slice(1)
+    else
+      title= ''
+    
+    link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap.min.css')
+    link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap-theme.min.css')
 
     script(src='/components/Chart.js/Chart.js')
 
-    link(rel='stylesheet', href='/stylesheets/stylesheet.css')
+    link(rel='stylesheet', href='stylesheets/stylesheet.css')
 
-    link(rel='stylesheet', href='/stylesheets/login.css')
-    link(rel='stylesheet', href='/stylesheets/sticky-footer.css')
-    link(rel='stylesheet', href='/components/world-flags-sprite/stylesheets/flags32.css')
-    link(rel='stylesheet', href='/components/world-flags-sprite/stylesheets/flags16.css')
+    link(rel='stylesheet', href='stylesheets/login.css')
+    link(rel='stylesheet', href='stylesheets/sticky-footer.css')
+    link(rel='stylesheet', href='components/world-flags-sprite/stylesheets/flags32.css')
+    link(rel='stylesheet', href='components/world-flags-sprite/stylesheets/flags16.css')
 
-    script(src='/components/raphael/raphael-min.js')
-    script(src='/components/justgage-bower/justgage.js')
+    //- Angular Animation Stylesheets
+    link(rel='stylesheet', href='stylesheets/animations.css')    
+
+    script(src='components/raphael/raphael-min.js')
+    script(src='components/justgage-bower/justgage.js')
     
   body
     nav.navbar.navbar-inverse.navbar-fixed-top
@@ -36,8 +49,10 @@ html
           ul.nav.navbar-nav.navbar-right
             //- li.active
             //-   a(href='#') Home
-            //- li
-            //-   a(href='#about') About
+            li
+              a(href='/auth') Log in
+            li
+              a(href='/about') About
             //- li
             //-   a(href='#contact') Contact
             li.dropdown
@@ -51,7 +66,7 @@ html
                 li
                   if reqUser
                     a(href='/user/id/' + reqUser._id) Profile
-                    a(href='/auth/logout') Logout
+                    a(href='/auth/logout', target='_self') Logout
                   else
                     a(href='/auth') Log in
   
@@ -64,18 +79,33 @@ html
             .alert.alert-success(role='alert')
                 =reqFlashSuccess
 
-    block content
+    .container-fluid
+      .row
+        div(class="col-xs-12 col-sm-12 col-md-12 col-lg-12")
+          div(class="view-container")
+            div(ng-view, class="view-frame")
+              block content
 
     footer.footer
       .container
         p.text-muted ...
-    //-
-        img(src='/images/nodejs-light.svg')
-        h1 Nodejs Web Starter Kit
-      
-    //-    
-        p.lead
-          | Use this document as a way to quickly start any new project.
-          br
-          |  All you get is this text and a mostly barebones HTML document.
-    //- /.container
+
+    //- Angular JavaScript Core
+    script(type='text/javascript' src='components/angular/angular.min.js')
+
+    //- jQuery JavaScript
+    script(src='components/jquery/dist/jquery.min.js')
+
+    //- Bootstrap JavaScript
+    script(src='components/bootstrap/dist/js/bootstrap.min.js')
+
+
+    //- Angular JavaScript Modules
+    script(type='text/javascript' src='components/angular-route/angular-route.min.js')
+    script(type='text/javascript' src='components/angular-resource/angular-resource.min.js')
+    script(type='text/javascript' src='components/angular-animate/angular-animate.min.js')
+    script(type='text/javascript' src='components/angular-sanitize/angular-sanitize.min.js')
+
+    //- Angular application JavaScript
+    script(type='text/javascript' src='appAngular')
+

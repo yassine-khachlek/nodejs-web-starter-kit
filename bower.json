@@ -19,6 +19,11 @@
     "bootstrap": "~3.3.5",
     "jquery": "~2.1.4",
     "justgage-bower": "justgage-official#~1.1.0",
-    "world-flags-sprite": "*"
+    "world-flags-sprite": "*",
+    "angular": "~1.4.7",
+    "angular-resource": "~1.4.7",
+    "angular-route": "~1.4.7",
+    "angular-animate": "~1.4.7",
+    "angular-sanitize": "~1.4.7"
   }
 }

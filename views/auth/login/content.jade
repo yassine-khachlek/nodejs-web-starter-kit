@@ -1,0 +1,32 @@
+.container-fluid
+  .row
+
+    .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+
+     
+      #loginbox.mainbox.col-md-6.col-md-offset-3.col-sm-6.col-sm-offset-3
+
+        .panel.panel-default
+          .panel-heading
+            .panel-title.text-center Login
+          .panel-body
+            //form#form.form-horizontal(name='form', enctype='multipart/form-data', method='POST', action='/auth/login')
+            form#form.form-horizontal(name='form', method='POST', action='/auth/login')
+              .input-group
+                span.input-group-addon
+                  i.glyphicon.glyphicon-user
+                input#user.form-control(type='text', name='username', value='', placeholder='Email or username')
+              .input-group
+                span.input-group-addon
+                  i.glyphicon.glyphicon-lock
+                input#password.form-control(type='password', name='password', placeholder='Password')
+              .form-group
+                // Button
+                .col-sm-12.controls
+                  button.btn.btn-lg.btn-success.btn-block.pull-right(type='submit', href='#')
+                    //- i.glyphicon.glyphicon-log-in
+                    |  Log in
+
+        if reqFlashError && reqFlashError!=''
+          .alert.alert-danger(role='alert')
+              =reqFlashError

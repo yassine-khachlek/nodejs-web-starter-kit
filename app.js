@@ -12,6 +12,8 @@ var mongooseSchema = mongoose.Schema;
 // shared object with all express routes
 var appGlobal = {};
 
+appGlobal.base = '/';
+
 appGlobal.config = {};
 
 if( !process.env.NODE_ENV ){
@@ -150,8 +152,19 @@ routes.forEach(function(val, key){
   if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
     uri = val.uri.split('/');
     uri.pop();
-    uri = uri.join('/');
+    uri = uri.join('/') + '/';
     app.use(uri, val.router);
+    
+    // add the new route to routes
+    // very important for angular
+    var tmp = {
+      'filePath': val.filePath,
+      'uri': uri,
+      'router': val.router,
+    };
+
+    routes.push(tmp);
+
   }
 });
 
@@ -245,8 +258,10 @@ app.set('app', appGlobal);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
+  err.uri = req.protocol + '://' + req.get('host') + req.originalUrl;
   next(err);
 });
+
 
 // error handlers
 
@@ -256,6 +271,8 @@ if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
+      base: appGlobal.base,
+      xhr: req.xhr,
       message: err.message,
       error: err
     });
@@ -267,6 +284,8 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
+    base: appGlobal.base,
+    xhr: req.xhr,
     message: err.message,
     error: {}
   });
