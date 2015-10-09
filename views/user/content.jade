@@ -1,0 +1,14 @@
+.container-fluid
+  .row
+
+    .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+      
+      .col-xs-2.col-sm-2.col-md-2.col-lg-2
+
+        if reqUser.local.photos[0].value
+          img.img-rounded.img-responsive(src=reqUser.local.photos[0].value, alt='Responsive image')(style='width: 100%;')
+      
+      .col-xs-10.col-sm-10.col-md-10.col-lg-10
+        pre(style='white-space: pre;')
+          code
+            = JSON.stringify(reqUser, '', '  ')

@@ -1,0 +1,15 @@
+.container-fluid
+  .row
+
+    .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+
+      .alert.alert-info.alert-dismissible(role='alert')
+        button.close(type='button', data-dismiss='alert', aria-label='Close')
+          span(aria-hidden='true') ×
+        strong Listing
+        |  all routes.
+
+      ul.nav.nav-sidebar
+        each val, index in routes
+          li
+            a(href=val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)

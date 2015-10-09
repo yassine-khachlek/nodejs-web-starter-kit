@@ -65,7 +65,8 @@ html(ng-app="mainModule", ng-controller="homeController")
               ul.dropdown-menu
                 li
                   if reqUser
-                    a(href='/user/id/' + reqUser._id) Profile
+                    //--a(href='/user/id/' + reqUser._id) Profile
+                    a(href='user') Profile
                     a(href='/auth/logout', target='_self') Logout
                   else
                     a(href='/auth') Log in
@@ -75,9 +76,18 @@ html(ng-app="mainModule", ng-controller="homeController")
 
         .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
 
+          //-- Message when Javascript is disabled.
+          noscript
+            .alert.alert-danger.alert-dismissible(role='alert')
+              strong JavaScript Required.
+              |  We're sorry, but this website is working better with JavaScript enabled.
+
           if reqFlashSuccess && reqFlashSuccess!=''
-            .alert.alert-success(role='alert')
-                =reqFlashSuccess
+            .alert.alert-success.alert-dismissible(role='alert')
+              button.close(type='button', data-dismiss='alert', aria-label='Close')
+                span(aria-hidden='true') ×
+              strong
+              =reqFlashSuccess
 
     .container-fluid
       .row
@@ -95,6 +105,17 @@ html(ng-app="mainModule", ng-controller="homeController")
 
     //- jQuery JavaScript
     script(src='components/jquery/dist/jquery.min.js')
+
+    script.
+      $(document).ready(function () {
+       
+        window.setTimeout(function() {
+          $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
+            $(".alert-success").alert('close');
+          });
+        }, 2000);
+       
+      });
 
     //- Bootstrap JavaScript
     script(src='components/bootstrap/dist/js/bootstrap.min.js')

@@ -1,8 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/*', function(req, res, next) {
+/*
+  The /* routes will not work because 
+  it's not included in angular routes
+  Need to found another way to do that
+*/
 
+router.get('/', function(req, res, next) {
+/*
   if( !req.params[0] ){
     var err = new Error('Not Found');
     err.status = 404;
@@ -45,18 +51,35 @@ router.get('/*', function(req, res, next) {
     if( user && user.local ){
       delete user.local.password;
     }
-    
+*/
 
-    // .. handle `value` here
+  if (req.user) {
+
+    // When user is logged in
     res.render('user', { 
+      base: req.app.get('app').base,
+      xhr: req.xhr,
       title: 'Express',
       routes: req.app.get('app').routes,
       reqUser: req.user,
-      reqFlashSuccess: req.flash('success'),
-      user: user,     
-    });
+      reqSession: req.session
+    });  
 
-  });
+  }else{
+    // If not logged in
+    var err = new Error("You do not have sufficient permissions to access this page.");
+
+    res.render('error', { 
+      base: req.app.get('app').base,
+      xhr: req.xhr,
+      title: 'Express',
+      routes: req.app.get('app').routes,
+      error: err
+    }); 
+
+  }
+
+//  });
 
 });
 

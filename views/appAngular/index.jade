@@ -1,3 +1,5 @@
-include ./modules/mainModule/index.jade
-include ./modules/appControllers.js
-include ./modules/appAnimations.js
+//-- Silence when requested with xhr
+if !xhr
+  include ./modules/mainModule/index.jade
+  include ./modules/appControllers.js
+  include ./modules/appAnimations.js

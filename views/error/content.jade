@@ -1,0 +1,20 @@
+.container-fluid
+  .row
+
+    .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
+      if error
+        if error.message || error.status
+          h1
+            if error.status
+              = error.status + '. '
+            if error.message
+              = error.message
+
+        if error.uri
+          h3
+            = error.uri
+
+        if error.stack
+          pre
+            = error.stack
+    
