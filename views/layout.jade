@@ -1,5 +1,5 @@
 doctype html
-html(ng-app="mainModule", ng-controller="homeController")
+html(ng-app="mainModule", ng-controller="mainController")
   head
 
     meta(charset="utf-8")
@@ -19,8 +19,6 @@ html(ng-app="mainModule", ng-controller="homeController")
     link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap.min.css')
     link(rel='stylesheet', href='components/bootstrap/dist/css/bootstrap-theme.min.css')
 
-    script(src='/components/Chart.js/Chart.js')
-
     link(rel='stylesheet', href='stylesheets/stylesheet.css')
 
     link(rel='stylesheet', href='stylesheets/login.css')
@@ -30,9 +28,6 @@ html(ng-app="mainModule", ng-controller="homeController")
 
     //- Angular Animation Stylesheets
     link(rel='stylesheet', href='stylesheets/animations.css')    
-
-    script(src='components/raphael/raphael-min.js')
-    script(src='components/justgage-bower/justgage.js')
     
   body
     nav.navbar.navbar-inverse.navbar-fixed-top
@@ -100,11 +95,17 @@ html(ng-app="mainModule", ng-controller="homeController")
       .container
         p.text-muted ...
 
+    //- jQuery JavaScript
+    //- Loaded before angular, to make the javascript from partial template executable
+    script(src='components/jquery/dist/jquery.min.js')
+
+    script(src='/components/Chart.js/Chart.js')
+
+    script(src='components/raphael/raphael-min.js')
+    script(src='components/justgage-bower/justgage.js')
+
     //- Angular JavaScript Core
     script(type='text/javascript' src='components/angular/angular.min.js')
-
-    //- jQuery JavaScript
-    script(src='components/jquery/dist/jquery.min.js')
 
     script.
       $(document).ready(function () {
@@ -127,6 +128,7 @@ html(ng-app="mainModule", ng-controller="homeController")
     script(type='text/javascript' src='components/angular-animate/angular-animate.min.js')
     script(type='text/javascript' src='components/angular-sanitize/angular-sanitize.min.js')
 
-    //- Angular application JavaScript
+    //- Angular JavaScript application
     script(type='text/javascript' src='appAngular')
 
+    block endBody

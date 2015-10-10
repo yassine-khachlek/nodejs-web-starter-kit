@@ -4,10 +4,11 @@ var path = require('path');
 
 router.get('/', function(req, res, next) {
 
-  res.render('examples/performance-monitoring', { 
+  res.render(path.resolve(__dirname, '../views/index'), { 
+	base: req.app.get('app').base,
+	xhr: req.xhr,
   	title: 'Express',
   	routes: req.app.get('app').routes,
-  	reqUser: req.user,
   });
 
 });
