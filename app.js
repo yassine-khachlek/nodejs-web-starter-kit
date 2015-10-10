@@ -178,11 +178,13 @@ function buildPackages(pathDir, packages){
   // Get the list of routes files
   fs.readdirSync(pathDir).forEach(function(fileName) {
 
-    var packageName = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[0];
-    var insideThePackageRootesFolder = ( path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[1] == 'routes' );
+    var packageVendor = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[0];
+    var packageName = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[1];
+    
+    var insideThePackageRootesFolder = ( path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[2] == 'routes' );
 
     // Have a package name && inside the package rooutes folder
-    if( packageName && insideThePackageRootesFolder ){
+    if( packageVendor && packageName && insideThePackageRootesFolder ){
 
       if( fs.statSync(path.resolve(pathDir, fileName)).isFile() ){
 
@@ -195,7 +197,8 @@ function buildPackages(pathDir, packages){
           uri = uri.join();
 
           // the routes folder name from the uri
-          uri = '/' + packageName + uri.substring(('/' + packageName + '/routes').length, uri.length);
+          uri = '/' + packageVendor + '/' + packageName + uri.substring(('/' + packageVendor + '/' + packageName + '/routes').length, uri.length);
+          //uri = '/' + packageName + uri.substring(('/' + packageName + '/routes').length, uri.length);
 
           tmp = {
             'filePath': path.resolve(pathDir, fileName),
@@ -216,7 +219,7 @@ function buildPackages(pathDir, packages){
       var folderPath = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/');
 
       // Explore the packages root and subfolder named routes
-      if( !folderPath[1] || folderPath[1] == 'routes' ){
+      if( !folderPath[2] || folderPath[2] == 'routes' ){
         buildPackages(path.resolve(pathDir, fileName), packages);
       }
       
@@ -243,6 +246,17 @@ packages.forEach(function(val, key){
     uri.pop();
     uri = uri.join('/');
     app.use(uri, val.router);
+
+    // add the new route to routes
+    // very important for angular
+    var tmp = {
+      'filePath': val.filePath,
+      'uri': uri,
+      'router': val.router,
+    };
+
+    routes.push(tmp);
+
   }
 });
 
@@ -273,7 +287,6 @@ if (app.get('env') === 'development') {
     res.render('error', {
       base: appGlobal.base,
       xhr: req.xhr,
-      message: err.message,
       error: err
     });
   });
@@ -286,7 +299,6 @@ app.use(function(err, req, res, next) {
   res.render('error', {
     base: appGlobal.base,
     xhr: req.xhr,
-    message: err.message,
     error: {}
   });
 });
