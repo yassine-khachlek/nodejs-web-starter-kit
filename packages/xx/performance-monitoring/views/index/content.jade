@@ -1,0 +1,54 @@
+.container-fluid
+  .row
+    .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1.sidebar
+      ul.nav.nav-pills
+        - var packageBaseUri = '/voidmain/performance-monitoring/'
+        if routes
+          each val, index in routes
+            if val.uri.substring(0, packageBaseUri.length) == packageBaseUri
+              li.active
+                a(href=val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)
+
+    .col-xs-12.col-sm-9.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
+
+      .alert.alert-info.alert-dismissible(role='alert')
+        //-button.close(type='button', data-dismiss='alert', aria-label='Close')
+          span(aria-hidden='true') ×
+        strong Live performance monitoring
+        |  , using just gauge and socket.io.
+
+      .row
+
+        style(type='text/css').
+          .glyphicon-refresh-animate {
+            -animation: spin .7s infinite linear;
+            -webkit-animation: webkitSpin .7s infinite linear;
+            -moz-animation: mozSpin .7s infinite linear;
+          }
+          @-webkit-keyframes webkitSpin {
+            from { -webkit-transform: rotate(0deg);}
+            to { -webkit-transform: rotate(360deg);}
+          }
+          @-moz-keyframes mozSpin {
+            from { -moz-transform: rotate(0deg);}
+            to { -moz-transform: rotate(360deg);}
+          }          
+          @keyframes spin {
+            from { transform: scale(1) rotate(0deg);}
+            to { transform: scale(1) rotate(360deg);}
+          }
+        
+        #loading.col-xs-12.col-sm-12.col-md-12.col-lg-12.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0(style="font-size: 5vmax;text-align: center;padding-bottom: 20px;")
+          span.glyphicon.glyphicon-refresh.glyphicon-refresh-animate(style="font-size: 2vmax;")
+          
+
+
+        .col-xs-12.col-sm-12.col-md-4.col-lg-4.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
+          #gLoadavg.img-responsive.img-circle.center-block
+
+        .col-xs-12.col-sm-12.col-md-4.col-lg-4.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0            
+          #gMem.img-responsive.img-circle.center-block
+
+        .col-xs-12.col-sm-12.col-md-4.col-lg-4.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0            
+          #gCpus.img-responsive.img-circle.center-block
+

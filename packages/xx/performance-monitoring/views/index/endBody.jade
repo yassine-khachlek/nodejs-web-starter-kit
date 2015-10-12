@@ -1,0 +1,120 @@
+script(src='socket.io/socket.io.js')
+
+script(src='components/raphael/raphael-min.js')
+script(src='components/justgage-bower/justgage.js')
+
+script.
+
+  $( document ).ready(function() {
+
+    setTimeout(function(){
+
+      $("#loading").fadeTo(500, 0).slideUp(500, function(){});
+
+      var gInit = false;
+
+      var gLoadavg = {};
+      var gMem = {};
+      var gCpus = {};
+      
+      var socket = io.connect('http://localhost:3000');
+
+      socket.on('connect', function(){
+
+        console.log('Connected');    
+
+        gLoadavg = new JustGage({
+          id: "gLoadavg",
+          value: 0,
+          decimals: 2,
+          min: 0,
+          max: 1,
+          title: "Load Average",
+        });
+
+        gMem = new JustGage({
+          id: "gMem",
+          value: 0,
+          decimals: 2,
+          min: 0,
+          max: 1,
+          title: "System Memory",
+        });
+
+        gCpus = new JustGage({
+          id: "gCpus",
+          value: 0,
+          decimals: 2,
+          min: 0,
+          max: 100,
+          title: "CPU",
+        });
+
+      });
+
+      socket.on('disconnect', function(){
+
+        console.log('Connected');
+
+        gInit = false;
+        gLoadavg = {};
+        gMem = {};
+        gCpus = {};
+        document.getElementById('gLoadavg').innerHTML = '';
+        document.getElementById('gMem').innerHTML = '';
+        document.getElementById('gCpus').innerHTML = '';
+      });
+
+      socket.on('gaugeValue', function (data) {
+
+        console.log(data);
+
+        var usedMem = (data.totalmem - data.freemem) / Math.pow(1024, 2);
+        var totalMem = data.totalmem / Math.pow(1024, 2);
+
+        if(!gInit){
+
+          gInit = true;
+          
+          document.getElementById('gLoadavg').innerHTML = '';
+          document.getElementById('gMem').innerHTML = '';
+          document.getElementById('gCpus').innerHTML = '';
+
+          gLoadavg = new JustGage({
+            id: "gLoadavg",
+            value: 0,
+            decimals: 3,
+            min: 0,
+            max: data.cpus.length,
+            title: "Load Average",
+          });
+
+          gMem = new JustGage({
+            id: "gMem",
+            value: 0,
+            decimals: 0,
+            min: 0,
+            max: parseInt(totalMem),
+            title: "System Memory",
+          });
+
+          gCpus = new JustGage({
+            id: "gCpus",
+            value: 0,
+            decimals: 2,
+            min: 0,
+            max: 100,
+            title: "CPU",
+          });
+
+        }
+
+        gLoadavg.refresh(data.loadavg[0]);
+        gMem.refresh( usedMem );
+        gCpus.refresh( data.loadavgcpus.used );
+
+      });              
+
+    }, 1000);
+
+  });
