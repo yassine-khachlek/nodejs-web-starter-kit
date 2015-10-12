@@ -1,0 +1,7 @@
+[
+	{
+  		"filePath": "/home/voidmain/Desktop/nodejs-web-starter-kit/packages/voidmain/chart/routes/index.js",
+  		"uri": "/voidmain/chart/:CHART_TYPE",
+  		"templateUrl": "function(params){ return '/voidmain/chart/' + params.CHART_TYPE; }"
+	}
+]

@@ -208,6 +208,28 @@ function buildPackages(pathDir, packages){
 
           packages.push(tmp);
 
+          // Extends routes
+          var extendsRoutesFilePath = path.resolve(__dirname, 'packages', packageVendor, packageName, 'extendsRoutes.json');
+          
+          if( fs.existsSync(extendsRoutesFilePath) ){
+            
+            var extendsRoutes = JSON.parse( fs.readFileSync( extendsRoutesFilePath ).toString() );
+            
+            extendsRoutes.forEach(function(val, index){
+
+              tmp = {
+                'filePath': val.filePath,
+                'uri': val.uri,
+                'templateUrl': val.templateUrl,
+                'router': require(val.filePath),
+              };
+
+              packages.push(tmp);
+
+            });
+
+          }
+
         }
         
       }

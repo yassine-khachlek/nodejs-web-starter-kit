@@ -1,5 +1,8 @@
 each route in routes
   | when( '#{route.uri}', {
-  |   templateUrl: '#{route.uri}',
+  if !route.templateUrl
+    | templateUrl: '#{route.uri}',
+  else
+    | templateUrl: #{route.templateUrl},
   |   controller: 'mainController'
   | }).

@@ -99,14 +99,6 @@ html(ng-app="mainModule", ng-controller="mainController")
     //- Loaded before angular, to make the javascript from partial template executable
     script(src='components/jquery/dist/jquery.min.js')
 
-    script(src='/components/Chart.js/Chart.js')
-
-    script(src='components/raphael/raphael-min.js')
-    script(src='components/justgage-bower/justgage.js')
-
-    //- Angular JavaScript Core
-    script(type='text/javascript' src='components/angular/angular.min.js')
-
     script.
       $(document).ready(function () {
        
@@ -120,6 +112,10 @@ html(ng-app="mainModule", ng-controller="mainController")
 
     //- Bootstrap JavaScript
     script(src='components/bootstrap/dist/js/bootstrap.min.js')
+
+
+    //- Angular JavaScript Core
+    script(type='text/javascript' src='components/angular/angular.min.js')
 
 
     //- Angular JavaScript Modules

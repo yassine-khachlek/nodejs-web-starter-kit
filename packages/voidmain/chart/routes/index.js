@@ -28,8 +28,10 @@ var charts = [
 
 router.get('/', function(req, res, next) {
 
-  res.render('chart/index', { 
-  	title: 'Express',
+  res.render(path.resolve(__dirname, '../views/index'), { 
+    base: req.app.get('app').base,
+    xhr: req.xhr,  	
+    title: 'Express',
   	routes: req.app.get('app').routes,
   	reqUser: req.user,
   	charts: charts
@@ -58,9 +60,12 @@ router.get('/*', function(req, res, next) {
   }
 
   var chartName = params[0];
-
-  res.render('chart/'+chartName, { 
-  	title: 'Express',
+console.log(path.resolve(__dirname, '../views/index', chartName));
+//  res.render('chart/'+chartName, { 
+  res.render(path.resolve(__dirname, '../views/index', chartName), { 
+    base: req.app.get('app').base,
+    xhr: req.xhr,     	
+    title: 'Express',
   	routes: req.app.get('app').routes,
   	reqUser: req.user,
   	charts: charts
