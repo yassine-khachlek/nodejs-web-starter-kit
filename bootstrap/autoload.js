@@ -2,7 +2,7 @@ var events = require('events');
 var path = require('path');
 var fs = require('fs');
 
-function Init(options) {
+function Autoload(options) {
 
   Object.keys(options).forEach(function(optionValue, optionIndex){
     this[optionValue] = options[optionValue];
@@ -22,9 +22,9 @@ function Init(options) {
 
 }
 
-Init.prototype.getConfig = function() {
+Autoload.prototype.getConfig = function() {
   
-  var initEvents  = this;
+  var AutoloadEvents  = this;
 
   var config      = this.config;
   var packages    = this.packages;
@@ -36,7 +36,7 @@ Init.prototype.getConfig = function() {
   config.on('done', function(err, configData){
     
     if( err ){
-      return initEvents.emit('done', err);
+      return AutoloadEvents.emit('done', err);
     }
 
     appConfig.config = configData;
@@ -46,7 +46,7 @@ Init.prototype.getConfig = function() {
     database.on('done', function(err, databaseData){
       
       if( err ){
-        return initEvents.emit('done', err);
+        return AutoloadEvents.emit('done', err);
       }
 
       appConfig.database = databaseData;
@@ -55,12 +55,12 @@ Init.prototype.getConfig = function() {
       packages.on('done', function(err, packagesData){
         
         if( err ){
-          return initEvents.emit('done', err);
+          return AutoloadEvents.emit('done', err);
         }
 
         appConfig.packages = packagesData;
 
-        initEvents.emit('done', null, appConfig);
+        AutoloadEvents.emit('done', null, appConfig);
 
       });
 
@@ -79,10 +79,10 @@ Init.prototype.getConfig = function() {
 
 };
 
-Init.prototype.__proto__ = events.EventEmitter.prototype;
+Autoload.prototype.__proto__ = events.EventEmitter.prototype;
 
 module.exports = function (options) {
-    return new Init(options);
+    return new Autoload(options);
 }
 
 

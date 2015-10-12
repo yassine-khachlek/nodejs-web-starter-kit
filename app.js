@@ -20,19 +20,15 @@ var app = express();
 process.env.NODE_ENV = process.env.NODE_ENV || 'default';
 
 var appGlobal = {};
-appGlobal.base = '/';
-appGlobal.config = {};
-appGlobal.database = {};
-appGlobal.packages = [];
 
-var init = require('./core/init')({
+var autoload = require('./bootstrap/autoload')({
   "env": process.env.NODE_ENV,
   "configPath": path.resolve(__dirname, 'config'),
   "packagesPath": path.resolve(__dirname, 'packages'),
   "mongoose": mongoose,
 });
 
-init.on('done', function(err, data){
+autoload.on('done', function(err, data){
 
   if(err){
   
@@ -44,6 +40,7 @@ init.on('done', function(err, data){
   
       appGlobal = data;
 
+      // Needed to be accessible outside the routes
       process.database = appGlobal.database;
       process.auth = appGlobal.config.auth;
 
@@ -303,6 +300,6 @@ init.on('done', function(err, data){
 
 });
 
-init.getConfig();
+autoload.getConfig();
 
 module.exports = app;
