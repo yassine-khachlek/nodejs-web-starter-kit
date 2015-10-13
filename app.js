@@ -18,12 +18,15 @@ var flash = require('connect-flash');
 var app = express();
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'default';
+process.app = {};
+
 
 var appGlobal = {};
 
 var autoload = require('./bootstrap/autoload')({
   "env": process.env.NODE_ENV,
   "configPath": path.resolve(__dirname, 'config'),
+  "routesPath": path.resolve(__dirname, 'routes'),
   "packagesPath": path.resolve(__dirname, 'packages'),
   "mongoose": mongoose,
 });
@@ -33,16 +36,12 @@ autoload.on('done', function(err, data){
   if(err){
   
     return console.log(err);
-  
+
   }else{
   
       //console.log(data)
-  
-      appGlobal = data;
 
-      // Needed to be accessible outside the routes
-      process.database = appGlobal.database;
-      process.auth = appGlobal.config.auth;
+      appGlobal = data;
 
       // view engine setup
       app.set('views', path.join(__dirname, 'views'));
@@ -73,52 +72,10 @@ autoload.on('done', function(err, data){
         done(null, user);
       });
 
-      function buildRoutes(pathDir, routes){
-
-        if(!routes){
-          var routes = [];
-        }
-
-        // Get the list of routes files
-        fs.readdirSync(pathDir).forEach(function(fileName) {
-          
-          if( fs.statSync(path.resolve(pathDir, fileName)).isFile() ){
-
-            // Filter *.js
-            if( fileName.split('.')[ fileName.split('.').length-1 ] === 'js' ){
-
-              uri = path.resolve(pathDir, fileName);
-              uri = uri.replace(path.resolve(__dirname, 'routes'), '').split('.');
-              uri.pop();
-              uri = uri.join();
-
-              tmp = {
-                'filePath': path.resolve(pathDir, fileName),
-                'uri': uri,
-                'router': require(path.resolve(pathDir, fileName)),
-              };
-
-              routes.push(tmp);
-
-            }
-            
-          }
-
-          if( fs.statSync(path.resolve(pathDir, fileName)).isDirectory() ){
-            buildRoutes(path.resolve(pathDir, fileName), routes);
-          }
-
-        });
-
-        return routes;
-
-      }
-
-      var routes = buildRoutes(path.resolve(__dirname, 'routes'));
-
-      routes.forEach(function(val, key){
+      appGlobal.routes.forEach(function(val, key){
         // Use the filepath as an uri
         app.use(val.uri, val.router);
+
         // Set the index files as landing page for the folder routes and its subfolders
         if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
           uri = val.uri.split('/');
@@ -134,131 +91,11 @@ autoload.on('done', function(err, data){
             'router': val.router,
           };
 
-          routes.push(tmp);
+          appGlobal.routes.push(tmp);
 
         }
       });
 
-
-      function buildPackages(pathDir, packages){
-
-        if(!packages){
-          var packages = [];
-        }
-
-        // Get the list of routes files
-        fs.readdirSync(pathDir).forEach(function(fileName) {
-
-          var packageVendor = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[0];
-          var packageName = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[1];
-          
-          var insideThePackageRootesFolder = ( path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/')[2] == 'routes' );
-
-          // Have a package name && inside the package rooutes folder
-          if( packageVendor && packageName && insideThePackageRootesFolder ){
-
-            if( fs.statSync(path.resolve(pathDir, fileName)).isFile() ){
-
-              // Filter *.js
-              if( fileName.split('.')[ fileName.split('.').length-1 ] === 'js' ){
-
-                uri = path.resolve(pathDir, fileName);
-                uri = uri.replace(path.resolve(__dirname, 'packages'), '').split('.');
-                uri.pop();
-                uri = uri.join();
-
-                // the routes folder name from the uri
-                uri = '/' + packageVendor + '/' + packageName + uri.substring(('/' + packageVendor + '/' + packageName + '/routes').length, uri.length);
-                //uri = '/' + packageName + uri.substring(('/' + packageName + '/routes').length, uri.length);
-
-                tmp = {
-                  'filePath': path.resolve(pathDir, fileName),
-                  'uri': uri,
-                  'router': require(path.resolve(pathDir, fileName)),
-                };
-
-                packages.push(tmp);
-
-                // Extends routes
-                var extendsRoutesFilePath = path.resolve(__dirname, 'packages', packageVendor, packageName, 'extendsRoutes.json');
-                
-                if( fs.existsSync(extendsRoutesFilePath) ){
-                  
-                  var extendsRoutes = JSON.parse( fs.readFileSync( extendsRoutesFilePath ).toString() );
-                  
-                  extendsRoutes.forEach(function(val, index){
-
-                    tmp = {
-                      'filePath': val.filePath,
-                      'uri': val.uri,
-                      'templateUrl': val.templateUrl,
-                      'router': require(val.filePath),
-                    };
-
-                    packages.push(tmp);
-
-                  });
-
-                }
-
-              }
-              
-            }
-            
-          }
-
-          if( fs.statSync(path.resolve(pathDir, fileName)).isDirectory() ){
-
-            var folderPath = path.resolve(pathDir, fileName).replace(__dirname + '/packages/', '').split('/');
-
-            // Explore the packages root and subfolder named routes
-            if( !folderPath[2] || folderPath[2] == 'routes' ){
-              buildPackages(path.resolve(pathDir, fileName), packages);
-            }
-            
-          }
-
-        });
-
-        return packages;
-
-      }
-
-      var packages = buildPackages(path.resolve(__dirname, 'packages'));
-
-      packages.forEach(function(val, key){
-
-        // add packages routes to routes
-        routes.push(val);
-
-        // Use the filepath as an uri
-        app.use(val.uri, val.router);
-        // Set the index files as landing page for the folder routes and its subfolders
-        if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
-          uri = val.uri.split('/');
-          uri.pop();
-          uri = uri.join('/');
-          app.use(uri, val.router);
-
-          // add the new route to routes
-          // very important for angular
-          var tmp = {
-            'filePath': val.filePath,
-            'uri': uri,
-            'router': val.router,
-          };
-
-          routes.push(tmp);
-
-        }
-      });
-
-      // add routes to the shared object
-      appGlobal.routes = routes;
-
-      // share app object with all express routers
-      // so later it can be available using using
-      // req.app.get('app').something
       app.set('app', appGlobal);
 
       // catch 404 and forward to error handler

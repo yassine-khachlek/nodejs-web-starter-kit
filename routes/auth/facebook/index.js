@@ -1,10 +1,11 @@
+
 var express = require('express');
 var router = express.Router();
 var https = require('https');
 var querystring = require('querystring');
 
 // shared db over the process var until i found another clean solution!
-var User = process.database.default.users.model;
+var User = process.app.database.default.users.model;
 
 var ObjectId = require('../../../libs/ObjectId.js');
 
@@ -12,9 +13,9 @@ var passport = require('passport')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
 passport.use(new FacebookStrategy({
-    clientID: process.auth.passport.strategy.facebook.clientID,
-    clientSecret: process.auth.passport.strategy.facebook.clientSecret,
-    callbackURL: process.auth.passport.strategy.facebook.callbackURL,
+    clientID: process.app.auth.passport.strategy.facebook.clientID,
+    clientSecret: process.app.auth.passport.strategy.facebook.clientSecret,
+    callbackURL: process.app.auth.passport.strategy.facebook.callbackURL,
     profileFields: ['id','displayName','name','emails','photos'],
   },
   function(accessToken, refreshToken, profile, done) {

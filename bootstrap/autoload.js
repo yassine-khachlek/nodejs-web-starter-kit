@@ -1,3 +1,7 @@
+/**
+  Autoload config, packages, database, ...
+*/
+
 var events = require('events');
 var path = require('path');
 var fs = require('fs');
@@ -8,15 +12,20 @@ function Autoload(options) {
     this[optionValue] = options[optionValue];
   });
 
+  // Fix for the previous lines, the mongoose variabe is not set!
   this.mongoose = options.mongoose;
+  this.routesPath = options.routesPath;
+  this.packagesPath = options.packagesPath;
 
-  this.config   = require('./config')(options.configPath, options.env);
-  this.packages = require('./packages')(options.packagesPath, options.env);
+  this.configLoader   = require('./loaders/config')(options.configPath, options.env);
+  this.packagesLoader = require('./loaders/packages')(options.packagesPath, options.env);  
 
+  // Object will contain every autoloaded things
   this.appConfig = {
     "base": "/",
     "config": {},
     "database": {},
+    "routes": [],
     "packages": [],
   };
 
@@ -24,58 +33,94 @@ function Autoload(options) {
 
 Autoload.prototype.getConfig = function() {
   
-  var AutoloadEvents  = this;
+  // Class event emitter
+  var AutoloadEvent = this;
 
-  var config      = this.config;
-  var packages    = this.packages;
+  // Config loader
+  var configLoader  = this.configLoader;
+  // Packages loader
+  var packagesLoader= this.packagesLoader;
 
-  var mongoose        = this.mongoose;
+  var routesPath    = this.routesPath;
 
+  var packagesPath = this.packagesPath;
+
+  // Mongoose instance
+  var mongoose    = this.mongoose;
+
+  // Object to populate with loaded things
   var appConfig   = this.appConfig;
 
-  config.on('done', function(err, configData){
+  configLoader.on('done', function(err, configData){
     
     if( err ){
-      return AutoloadEvents.emit('done', err);
+      // Emit the received error from the config loader
+      return AutoloadEvent.emit('done', err);
     }
 
     appConfig.config = configData;
 
-    var database = require('./database')(appConfig.config.database, appConfig.config.databaseSchema, mongoose);
+    // Database loader
+    // Load it here, because it need configuration first
+    var databaseLoader = require('./loaders/database')(appConfig.config.database, appConfig.config.databaseSchema, mongoose);
 
-    database.on('done', function(err, databaseData){
+    databaseLoader.on('done', function(err, databaseData){
       
       if( err ){
-        return AutoloadEvents.emit('done', err);
+        // Emit the received error from the database loader
+        return AutoloadEvent.emit('done', err);
       }
 
       appConfig.database = databaseData;
 
+      //Should be set before loading routes
+      process.app.database = appConfig.database;
+      process.app.auth = appConfig.config.auth;
 
-      packages.on('done', function(err, packagesData){
+      packagesLoader.on('done', function(err, packagesData){
         
         if( err ){
-          return AutoloadEvents.emit('done', err);
+          // Emit the received error from the packages loader
+          return AutoloadEvent.emit('done', err);
         }
 
         appConfig.packages = packagesData;
 
-        AutoloadEvents.emit('done', null, appConfig);
+        var routesLoader = require('./loaders/routes')(routesPath);
+
+        routesLoader.on('done', function(err, routesData){
+
+          if( err ){
+            // Emit the received error from the routes loader
+            return AutoloadEvent.emit('done', err);
+          }
+
+          appConfig.routes = appConfig.routes.concat(routesData);
+
+          // Load routes packages
+          packagesData.forEach(function(val , index){
+            appConfig.routes = appConfig.routes.concat(val.routes);
+          })
+
+          // done
+          AutoloadEvent.emit('done', null, appConfig);
+
+        })
+
+        routesLoader.getRoutes();
 
       });
 
-      packages.getPackages();
+      packagesLoader.getPackages();
 
 
     });
 
-    database.getDatabase();    
+    databaseLoader.getDatabase();    
 
   });
 
-  config.getConfig();
-
-  
+  configLoader.getConfig();
 
 };
 

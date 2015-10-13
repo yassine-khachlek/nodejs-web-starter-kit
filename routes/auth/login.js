@@ -1,8 +1,9 @@
+
 var express = require('express');
 var router = express.Router();
 
 // shared database over the process var until i found another clean solution!
-var User = process.database.default.users.model;
+var User = process.app.database.default.users.model;
 
 var isValidPassword = function(user, password){
   return (user.local.password == password);
@@ -68,6 +69,7 @@ router.post('/',
     res.redirect('/users/' + req.user.username);
 });
 */
+
 router.post('/',
   passport.authenticate('local', { session: true, 
                                    successRedirect: '/',
