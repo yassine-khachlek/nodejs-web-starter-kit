@@ -10,7 +10,23 @@
     "schemaOptions": {
       "collection": "users",
       "_id": false,
-      "minimize": false,
+      "minimize": true,
+      "safe": true,
+      "strict": false
+    }
+
+  },
+
+  "blogs": {
+
+    "schema": {
+      "data": {}
+    },
+
+    "schemaOptions": {
+      "collection": "blogs",
+      "_id": false,
+      "minimize": true,
       "safe": true,
       "strict": false
     }

@@ -33,19 +33,6 @@ function routesBuilder(packageInfo, routesPath, currentPath, routes){
 
         routes.push(tmp);
 
-        packageInfo.extendsRoutes.forEach(function(val, index){
-
-          tmp = {
-            'filePath': val.filePath,
-            'uri': val.uri,
-            'templateUrl': val.templateUrl,
-            'router': require(val.filePath),
-          };
-
-          routes.push(tmp);
-
-        });
-
       }
       
     }
@@ -91,16 +78,29 @@ Packages.prototype.getPackages = function() {
           var packageObj = {
               vendor: vendorName,
               name: packageName,
-              routes: null,
+              routes: [],
               extendsRoutes: []
           }
+
+          packageObj.routes = routesBuilder(packageObj, path.resolve(packagesPath, vendorName, packageName, 'routes'));
 
           // add extendsRoutes if found
           if (fs.existsSync(path.resolve(packagesPath, vendorName, packageName, 'extendsRoutes.json'))) {
             packageObj.extendsRoutes =  JSON.parse(fs.readFileSync(path.resolve(packagesPath, vendorName, packageName, 'extendsRoutes.json')).toString());
           }
-         
-          packageObj.routes = routesBuilder(packageObj, path.resolve(packagesPath, vendorName, packageName, 'routes'));
+
+          packageObj.extendsRoutes.forEach(function(val, index){
+
+            tmp = {
+              'filePath': path.resolve(packagesPath, vendorName, packageName, 'routes', val.filePath),
+              'uri': val.uri,
+              'templateUrl': val.templateUrl,
+              'router': require(path.resolve(packagesPath, vendorName, packageName, 'routes', val.filePath)),
+            };
+
+            packageObj.routes.push(tmp);
+
+          });
 
           packages.push(packageObj);
 

@@ -59,9 +59,31 @@ router.get('/*', function(req, res, next) {
     return
   }
 
+  var chartFound = false;
+
+  charts.forEach(function(val, index){
+    if(params[0]==val.uri){
+      chartFound = true;
+    }
+  });
+
+  if(!chartFound){
+    
+    var err = new Error("Not Found.");
+
+    res.render('error', { 
+      base: req.app.get('app').base,
+      xhr: req.xhr,
+      title: 'Express',
+      routes: req.app.get('app').routes,
+      error: err
+    });
+
+    return
+  }
+
   var chartName = params[0];
-console.log(path.resolve(__dirname, '../views/index', chartName));
-//  res.render('chart/'+chartName, { 
+
   res.render(path.resolve(__dirname, '../views/index', chartName), { 
     base: req.app.get('app').base,
     xhr: req.xhr,     	

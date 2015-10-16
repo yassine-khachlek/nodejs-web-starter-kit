@@ -1,0 +1,7 @@
+[
+	{
+  		"filePath": "post.js",
+  		"uri": "/voidmain/blog/post/:POST_ID",
+  		"templateUrl": "function(params){ return '/voidmain/blog/post/' + params.POST_ID; }"
+	}
+]

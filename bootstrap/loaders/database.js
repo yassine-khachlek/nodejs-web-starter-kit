@@ -28,15 +28,14 @@ Database.prototype.getDatabase = function() {
   var mongooseConnectionOptions = databaseConfig.connections[databaseConfig.default].connectionOptions;
   var mongooseConnection = {};
 
+  database.default = {};
+
   Object.keys(databaseSchema).forEach(function(collection, index){
-    
-    database.default = {};
     database.default[collection] = {};
     database.default[collection].schema = new mongooseSchema(databaseSchema[collection].schema, databaseSchema[collection].schemaOptions);
     database.default[collection].model  = mongoose.model(collection, databaseSchema[collection].schema);
-
   });
-  
+
   var mongooseConnectWithRetry = function() {
     mongooseConnection = mongoose.connect(mongooseConnectionUri, mongooseConnectionOptions, function(err){
       // if (err) throw err;
@@ -49,7 +48,9 @@ Database.prototype.getDatabase = function() {
       }
     });
   };
+  
   mongooseConnectWithRetry();
+  
 
 };
 
