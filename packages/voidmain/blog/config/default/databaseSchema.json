@@ -1,14 +1,15 @@
 {
   
-  "users": {
+  "blogs": {
 
     "schema": {
-    	"local": {},
-    	"facebook": {}
+      "title": "String",
+      "content": "String",
+      "published": "Boolean"
     },
 
     "schemaOptions": {
-      "collection": "users",
+      "collection": "blogs",
       "_id": false,
       "minimize": true,
       "safe": true,

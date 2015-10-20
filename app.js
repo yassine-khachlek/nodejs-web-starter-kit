@@ -39,7 +39,7 @@ autoload.on('done', function(err, data){
 
   }else{
   
-      console.log(data)
+      //console.log(data)
 
       appGlobal = data;
 

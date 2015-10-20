@@ -62,6 +62,32 @@ Config.prototype.getConfig = function() {
             config[filename] = JSON.parse(data.toString());
 
             if (validFilesCount === Object.keys(config).length) {
+              
+              // Load and merge package config
+              Object.keys(config.app.providers).forEach(function(val, index){
+
+                var packageConfigPath = path.resolve('packages', config.app.providers[val], 'config', configEnv);
+
+                try {
+                  fs.readdirSync(packageConfigPath).forEach(function(val, index){
+
+                    var filename = val.split('.');
+                    filename.pop();
+                    filename = filename.join();                    
+
+                    var packageConfigObj = JSON.parse(fs.readFileSync(path.resolve(packageConfigPath, val)).toString());
+                    
+                    Object.keys(packageConfigObj).forEach(function(val, index){
+                      config[filename][val] = packageConfigObj[val];
+                    });
+
+                  });
+                } catch (e) {
+                  //console.log(e);
+                }
+
+              });
+
               // Done
               configEvent.emit('done', null, config);
             }
