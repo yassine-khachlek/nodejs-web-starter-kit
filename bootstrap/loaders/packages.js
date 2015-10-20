@@ -10,7 +10,7 @@ var fs = require('fs');
 function routesBuilder(packageInfo, routesPath, currentPath, routes){
 
   currentPath = currentPath || routesPath;
-  routes = routes || [];
+  routes = routes || {};
 
   // Get the list of routes files
   fs.readdirSync(currentPath).forEach(function(fileName) {
@@ -31,7 +31,7 @@ function routesBuilder(packageInfo, routesPath, currentPath, routes){
           'router': require(path.resolve(currentPath, fileName)),
         };
 
-        routes.push(tmp);
+        routes[ tmp.filePath ] = tmp;
 
       }
       
@@ -50,7 +50,7 @@ function routesBuilder(packageInfo, routesPath, currentPath, routes){
 
 function Packages(packagesPath) {
   this.packagesPath = packagesPath;
-  this.packages = [];
+  this.packages = {};
 }
 
 Packages.prototype.getPackages = function() {
@@ -78,8 +78,8 @@ Packages.prototype.getPackages = function() {
           var packageObj = {
               vendor: vendorName,
               name: packageName,
-              routes: [],
-              extendsRoutes: []
+              routes: {},
+              extendsRoutes: {}
           }
 
           packageObj.routes = routesBuilder(packageObj, path.resolve(packagesPath, vendorName, packageName, 'routes'));
@@ -89,20 +89,20 @@ Packages.prototype.getPackages = function() {
             packageObj.extendsRoutes =  JSON.parse(fs.readFileSync(path.resolve(packagesPath, vendorName, packageName, 'extendsRoutes.json')).toString());
           }
 
-          packageObj.extendsRoutes.forEach(function(val, index){
+          Object.keys(packageObj.extendsRoutes).forEach(function(val, index){
 
             tmp = {
-              'filePath': path.resolve(packagesPath, vendorName, packageName, 'routes', val.filePath),
-              'uri': val.uri,
-              'templateUrl': val.templateUrl,
-              'router': require(path.resolve(packagesPath, vendorName, packageName, 'routes', val.filePath)),
+              'filePath': path.resolve(packagesPath, vendorName, packageName, 'routes', packageObj.extendsRoutes[val].filePath),
+              'uri': packageObj.extendsRoutes[val].uri,
+              'templateUrl': packageObj.extendsRoutes[val].templateUrl,
+              'router': require(path.resolve(packagesPath, vendorName, packageName, 'routes', packageObj.extendsRoutes[val].filePath)),
             };
 
-            packageObj.routes.push(tmp);
+            packageObj.routes[ vendorName + '/' + packageName + '/' + val ] = tmp;
 
           });
 
-          packages.push(packageObj);
+          packages[packageObj.vendor + '/' + packageObj.name] = packageObj;
 
           if (((vendors.length - 1) === vendorIndex) && ((packagesName.length - 1) === packageIndex)) {
             // Done

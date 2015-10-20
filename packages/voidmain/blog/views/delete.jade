@@ -1,0 +1,34 @@
+extends ./layout.jade
+
+block localMenu
+
+  a.btn.btn-primary.btn-lg.btn-block(href='voidmain/blog/', role='button')
+    span.glyphicon.glyphicon-list(aria-hidden='true')
+
+  if post && post.id
+  
+    a.btn.btn-default.btn-lg.btn-block(href='voidmain/blog/read/'+post.id, role='button')
+      span.glyphicon.glyphicon-search(aria-hidden='true')
+
+block localContent
+
+  h1
+    if post && post.id
+      = 'Delete Post?'
+
+  form(action='', method='post')
+
+    .row
+
+      .col-xs-6.col-sm-6.col-md-6.col-lg-6
+
+        button.btn.btn-danger.btn-lg.btn-block(type='submit')
+          span.glyphicon.glyphicon-ok(aria-hidden='true')
+          
+      .col-xs-6.col-sm-6.col-md-6.col-lg-6
+
+        a.btn.btn-default.btn-lg.btn-block(href='voidmain/blog/read/'+post.id, role='button')
+          span.glyphicon.glyphicon-remove(aria-hidden='true')
+
+
+

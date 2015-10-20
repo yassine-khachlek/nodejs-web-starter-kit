@@ -39,7 +39,7 @@ autoload.on('done', function(err, data){
 
   }else{
   
-      //console.log(data)
+      console.log(data)
 
       appGlobal = data;
 
@@ -72,26 +72,26 @@ autoload.on('done', function(err, data){
         done(null, user);
       });
 
-      appGlobal.routes.forEach(function(val, key){
+      Object.keys(appGlobal.routes).forEach(function(val, key){
         // Use the filepath as an uri
-        app.use(val.uri, val.router);
+        app.use(appGlobal.routes[val].uri, appGlobal.routes[val].router);
 
         // Set the index files as landing page for the folder routes and its subfolders
-        if( val.uri.split('/')[ val.uri.split('/').length-1 ] === 'index' ){
-          uri = val.uri.split('/');
+        if( appGlobal.routes[val].uri.split('/')[ appGlobal.routes[val].uri.split('/').length-1 ] === 'index' ){
+          uri = appGlobal.routes[val].uri.split('/');
           uri.pop();
           uri = uri.join('/') + '/';
-          app.use(uri, val.router);
+          app.use(uri, appGlobal.routes[val].router);
           
           // add the new route to routes
           // very important for angular
           var tmp = {
-            'filePath': val.filePath,
+            'filePath': appGlobal.routes[val].filePath,
             'uri': uri,
-            'router': val.router,
+            'router': appGlobal.routes[val].router,
           };
 
-          appGlobal.routes.push(tmp);
+          appGlobal.routes[ appGlobal.routes[val].filePath ] = tmp;
 
         }
       });

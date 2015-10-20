@@ -1,0 +1,27 @@
+//- Extends this package layout
+
+extends /layout
+
+block append content
+  
+  if section
+
+    if section == "list"
+
+      include ./list.jade
+
+    if section == "create"
+
+      include ./create.jade
+
+    if section == "read"
+
+      include ./read.jade
+
+    if section == "update"
+
+      include ./update.jade   
+
+    if section == "delete"
+
+      include ./delete.jade    

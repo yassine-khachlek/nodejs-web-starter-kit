@@ -1,7 +1,17 @@
-[
-	{
-  		"filePath": "post.js",
-  		"uri": "/voidmain/blog/post/:POST_ID",
-  		"templateUrl": "function(params){ return '/voidmain/blog/post/' + params.POST_ID; }"
-	}
-]
+{
+	"read": {
+  		"filePath": "read.js",
+  		"uri": "/voidmain/blog/read/:POST_ID",
+  		"templateUrl": "function(params){ return '/voidmain/blog/read/' + params.POST_ID; }"
+	},
+	"update": {
+  		"filePath": "update.js",
+  		"uri": "/voidmain/blog/update/:POST_ID",
+  		"templateUrl": "function(params){ return '/voidmain/blog/update/' + params.POST_ID; }"
+	},
+  "delete": {
+      "filePath": "delete.js",
+      "uri": "/voidmain/blog/delete/:POST_ID",
+      "templateUrl": "function(params){ return '/voidmain/blog/delete/' + params.POST_ID; }"
+  }
+}

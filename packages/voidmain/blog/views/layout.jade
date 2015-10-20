@@ -1,0 +1,67 @@
+if postUpdateError && postUpdateError!=''
+  .alert.alert-danger.alert-dismissible(role='alert')
+    button.close(type='button', data-dismiss='alert', aria-label='Close')
+      span(aria-hidden='true') ×
+    strong
+    =postUpdateError
+
+if postUpdateSuccess && postUpdateSuccess!=''
+  .alert.alert-success.alert-dismissible(role='alert')
+    button.close(type='button', data-dismiss='alert', aria-label='Close')
+      span(aria-hidden='true') ×
+    strong
+    =postUpdateSuccess
+
+if xhr
+
+  if postUpdateErrorXhr && postUpdateErrorXhr!=''
+    .alert.alert-danger.alert-dismissible(role='alert')
+      button.close(type='button', data-dismiss='alert', aria-label='Close')
+        span(aria-hidden='true') ×
+      strong
+      =postUpdateErrorXhr
+
+  if postUpdateSuccessXhr && postUpdateSuccessXhr!=''
+    .alert.alert-success.alert-dismissible(role='alert')
+      button.close(type='button', data-dismiss='alert', aria-label='Close')
+        span(aria-hidden='true') ×
+      strong
+      =postUpdateSuccessXhr
+
+if !reqUser
+
+  .row
+
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12
+
+        block localContent
+
+else
+
+  style.
+    .sidebar-outer {
+        position: relative;
+    }
+    @media (min-width: 768px) {
+        .sidebar {
+            position: fixed;
+            overflow-y: auto;
+            display: inline-block;
+            box-sizing: border-box;
+            border-left: solid 1px #e0e0e0;
+        }
+    }
+  
+  .row
+
+    .col-xs-12.col-sm-10.col-md-10.col-lg-10
+
+      block localContent
+
+    .col-xs-12.col-sm-2.col-md-2.col-lg-2.sidebar
+
+        block localMenu
+      //-
+        .div
+          | &nbsp;
+

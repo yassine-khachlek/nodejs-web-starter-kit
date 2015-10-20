@@ -1,0 +1,43 @@
+extends ./layout.jade
+
+block localMenu
+
+  a.btn.btn-primary.btn-lg.btn-block(href='voidmain/blog/', role='button')
+    span.glyphicon.glyphicon-list(aria-hidden='true')
+
+block localContent
+
+  h1
+    if post && post.id
+      = 'Edit Post'
+
+  form(action='', method='post')
+
+    //-
+      .form-group
+        if post && post.id
+          input.form-control(type='text', placeholder='', value=post.id, disabled)
+    
+    .form-group
+      if post && post.title
+        - var postTitle =  post.title
+      else
+        - var postTitle =  ''
+      input.form-control(name='title', type='text', placeholder='Enter title here', value=postTitle)
+
+    .form-group
+      textarea.form-control(name='content', type='password', placeholder='', style='height: 300px;')
+        if post && post.content
+          = post.content
+
+    .checkbox
+      label
+        if post && post.published && post.published === true
+          input(name='published', type='checkbox', value='true', checked)
+          |  Publish
+        else
+          input(name='published', type='checkbox', value='true')
+          |  Publish
+
+    button.btn.btn-primary.btn-lg.btn-block(type='submit')
+      span.glyphicon.glyphicon-floppy-disk(aria-hidden='true')

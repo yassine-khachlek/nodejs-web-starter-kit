@@ -1,0 +1,39 @@
+extends ./layout.jade
+
+block localMenu
+
+  if post
+
+      if reqUser
+
+        a.btn.btn-primary.btn-lg.btn-block(href='voidmain/blog/', role='button')
+          span.glyphicon.glyphicon-list(aria-hidden='true')
+
+        a.btn.btn-warning.btn-lg.btn-block(href='voidmain/blog/update/'+post.id, role='button')
+          span.glyphicon.glyphicon-edit(aria-hidden='true')
+        
+        a.btn.btn-danger.btn-lg.btn-block(href='voidmain/blog/delete/'+post.id, role='button')
+          span.glyphicon.glyphicon-trash(aria-hidden='true')
+
+block localContent
+
+  if reqUser
+    if post.published
+      span.label.label-primary Published
+    else
+      span.label.label-warning Unpublished
+
+  article(style="display: block;padding-bottom: 64px;")
+
+    if post.title
+    
+      h1
+        = post.title
+    
+    if post.content
+      p
+        = post.content
+
+  a.btn.btn-default.btn-lg.btn-block(href='javascript:history.go(-1)', role='button')
+    //- span.glyphicon.glyphicon-return(aria-hidden='true')
+    | Back

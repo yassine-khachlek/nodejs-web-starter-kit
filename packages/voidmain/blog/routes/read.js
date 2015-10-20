@@ -4,9 +4,6 @@ var path = require('path');
 
 router.get('/*', function(req, res, next) {
 
-  console.log(req.params);
-  
-
   if( !req || !req.params || !req.params[0] || !req.params[0].split('/')[0] ){
       
       var err = new Error("Not Found, The post_id is missing.");
@@ -45,7 +42,7 @@ router.get('/*', function(req, res, next) {
 
       }
 
-      res.render(path.resolve(__dirname, '../views/post/index'), { 
+      res.render(path.resolve(__dirname, '../views/index'), { 
         base: req.app.get('app').base,
         xhr: req.xhr,
         title: '',
@@ -53,7 +50,8 @@ router.get('/*', function(req, res, next) {
         reqUser: req.user,
         reqFlashSuccess: req.flash('success'),
         reqUser: req.user,
-        post: post
+        post: post,
+        section: 'read'
       });
 
     })

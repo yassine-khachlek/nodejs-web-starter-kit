@@ -1,0 +1,41 @@
+extends ./layout.jade
+
+block localMenu
+
+  if reqUser
+    a.btn.btn-success.btn-lg.btn-block(href='voidmain/blog/create', role='button')
+      span.glyphicon.glyphicon-plus(aria-hidden='true')
+
+block localContent
+
+  if posts
+
+    each post, index in posts
+
+      article
+
+        h1
+          = post.title
+
+        p
+          //- Show first 512 chars if description is missing
+          if post.description
+            = post.description
+          else
+            if post.content < 512
+              = post.content
+            else
+              = post.content.substring(0,512) + '...'
+
+      if reqUser
+        if post.published
+          span.label.label-primary Published
+        else
+          span.label.label-warning Unpublished
+
+      .row
+
+        .col-xs-12.col-sm-12.col-md-12.col-lg-12
+        
+          a.btn.btn-default.pull-right(href='voidmain/blog/read/'+post.id, role='button') Read more...
+

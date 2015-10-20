@@ -8,13 +8,13 @@ var fs = require('fs');
 
 function Routes(routesPath) {
   this.routesPath = routesPath;
-  this.routes = [];
+  this.routes = {};
 }
 
 function routesBuilder(routesPath, currentPath, routes){
 
     currentPath = currentPath || routesPath;
-    routes = routes || [];
+    routes = routes || {};
 
 	// Get the list of routes files
 	fs.readdirSync(currentPath).forEach(function(fileName) {
@@ -35,7 +35,7 @@ function routesBuilder(routesPath, currentPath, routes){
 	        'router': require(path.resolve(currentPath, fileName)),
 	      };
 
-	      routes.push(tmp);
+	      routes[ tmp.filePath ] = tmp;
 
 	    }
 	    

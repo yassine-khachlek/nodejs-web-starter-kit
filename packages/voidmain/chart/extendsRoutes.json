@@ -1,7 +1,7 @@
-[
-	{
+{
+	"CHART_TYPE": {
   		"filePath": "index.js",
   		"uri": "/voidmain/chart/:CHART_TYPE",
   		"templateUrl": "function(params){ return '/voidmain/chart/' + params.CHART_TYPE; }"
 	}
-]
+}

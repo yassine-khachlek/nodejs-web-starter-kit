@@ -25,8 +25,8 @@ function Autoload(options) {
     "base": "/",
     "config": {},
     "database": {},
-    "routes": [],
-    "packages": [],
+    "routes": {},
+    "packages": {},
   };
 
 }
@@ -79,6 +79,7 @@ Autoload.prototype.getConfig = function() {
 
       packagesLoader.on('done', function(err, packagesData){
         
+
         if( err ){
           // Emit the received error from the packages loader
           return AutoloadEvent.emit('done', err);
@@ -95,11 +96,26 @@ Autoload.prototype.getConfig = function() {
             return AutoloadEvent.emit('done', err);
           }
 
-          appConfig.routes = appConfig.routes.concat(routesData);
+          //appConfig.routes = appConfig.routes.concat(routesData);
+
+          Object.keys(routesData).forEach(function(val, index){
+            appConfig.routes[val] = routesData[val];
+          });
 
           // Load routes packages
-          packagesData.forEach(function(val , index){
-            appConfig.routes = appConfig.routes.concat(val.routes);
+          Object.keys(packagesData).forEach(function(packageIdentifier , index){
+            
+            var providers = Object.keys(configData.app.providers).map(function (key) {return configData.app.providers[key]});
+
+            // Load only packages listed in the providers config
+            if( providers.indexOf(packageIdentifier) > -1 ){
+              //appConfig.routes = appConfig.routes.concat(packagesData[packageIdentifier].routes);
+
+              Object.keys(packagesData[packageIdentifier].routes).forEach(function(val, index){
+                appConfig.routes[val] = packagesData[packageIdentifier].routes[val];
+              });
+            }
+          
           })
 
           // done

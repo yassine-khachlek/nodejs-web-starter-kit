@@ -1,0 +1,27 @@
+if !xhr
+  
+  include ./extendsLayout.jade
+
+else
+  
+  if section
+
+    if section == "list"
+
+      include ./list.jade
+
+    if section == "create"
+
+      include ./create.jade
+
+    if section == "read"
+
+      include ./read.jade
+
+    if section == "update"
+
+      include ./update.jade
+
+    if section == "delete"
+
+      include ./delete.jade    

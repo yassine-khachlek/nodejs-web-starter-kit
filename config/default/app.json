@@ -1,0 +1,6 @@
+{
+	"providers" : {
+		"blog": "voidmain/blog",
+		"routes": "voidmain/routes"
+	}
+}
