@@ -1,20 +1,16 @@
-.container-fluid
-  .row
-    .col-xs-12.col-sm-3.col-md-2.col-lg-2.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1.sidebar
-    //-  
-      ul.nav.nav-sidebar
-        each val, index in routes
-          li
-            a(href=val.uri)=val.uri.charAt(0).toUpperCase() + val.uri.slice(1)
+.row
 
-    .col-xs-12.col-sm-9.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-0.col-md-offset-0.col-lg-offset-0
-      h1 About
-      p 
-        | Node.js Web Starter Kit is my Node.js starter kit for building web applications based on expressjs and other common modules.
-      .row
-        .col-sm-12.col-md-12
-          img.img-thumbnail(src='/images/nodejs-logo.png', style='height: 100px;')
-        .col-sm-12.col-md-12
-        .col-sm-12.col-md-12
-        .col-sm-12.col-md-12
-          img.img-thumbnail(src='/images/express-logo.png', style='height: 100px;')
+
+  .col-xs-12.col-sm-8.col-md-8.col-lg-8.col-xs-offset-0.col-sm-offset-2.col-md-offset-2.col-lg-offset-2
+
+    h1 About
+    p 
+      | Node.js Web Starter Kit is my Node.js starter kit for building web applications based on expressjs and other common modules.
+  
+    .row
+      .col-sm-12.col-md-12
+        img.img-thumbnail(src='/images/nodejs-logo.png', style='height: 100px;')
+      .col-sm-12.col-md-12
+      .col-sm-12.col-md-12
+      .col-sm-12.col-md-12
+        img.img-thumbnail(src='/images/express-logo.png', style='height: 100px;')

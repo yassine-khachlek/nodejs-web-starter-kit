@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
+var packageIdentifier = path.resolve(__dirname).split(path.sep);
+packageIdentifier = packageIdentifier[ packageIdentifier.length-3 ] + path.sep + packageIdentifier[ packageIdentifier.length-2 ];
+
 router.get('/', function(req, res, next) {
 
   var blogModel = req.app.get('app').database.default.blogs.model;

@@ -1,5 +1,6 @@
 {
 	"providers" : {
+		"angular": "voidmain/angular",
 		"blog": "voidmain/blog",
 		"routes": "voidmain/routes"
 	}

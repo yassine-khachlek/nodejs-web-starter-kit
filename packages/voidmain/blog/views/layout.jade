@@ -1,32 +1,38 @@
-if postUpdateError && postUpdateError!=''
-  .alert.alert-danger.alert-dismissible(role='alert')
-    button.close(type='button', data-dismiss='alert', aria-label='Close')
-      span(aria-hidden='true') ×
-    strong
-    =postUpdateError
+.row
 
-if postUpdateSuccess && postUpdateSuccess!=''
-  .alert.alert-success.alert-dismissible(role='alert')
-    button.close(type='button', data-dismiss='alert', aria-label='Close')
-      span(aria-hidden='true') ×
-    strong
-    =postUpdateSuccess
+  .col-xs-12.col-sm-12.col-md-12.col-lg-12
 
-if xhr
+    if xhr
 
-  if postUpdateErrorXhr && postUpdateErrorXhr!=''
-    .alert.alert-danger.alert-dismissible(role='alert')
-      button.close(type='button', data-dismiss='alert', aria-label='Close')
-        span(aria-hidden='true') ×
-      strong
-      =postUpdateErrorXhr
+      if postUpdateErrorXhr && postUpdateErrorXhr!=''
+        #localAlertError.alert.alert-danger.alert-dismissible(role='alert')
+          button.close(type='button', data-dismiss='alert', aria-label='Close')
+            span(aria-hidden='true') ×
+          strong
+          =postUpdateErrorXhr
 
-  if postUpdateSuccessXhr && postUpdateSuccessXhr!=''
-    .alert.alert-success.alert-dismissible(role='alert')
-      button.close(type='button', data-dismiss='alert', aria-label='Close')
-        span(aria-hidden='true') ×
-      strong
-      =postUpdateSuccessXhr
+      if postUpdateSuccessXhr && postUpdateSuccessXhr!=''
+        #localAlertSuccess.alert.alert-success.alert-dismissible(role='alert')
+          button.close(type='button', data-dismiss='alert', aria-label='Close')
+            span(aria-hidden='true') ×
+          strong
+          =postUpdateSuccessXhr
+
+    else
+
+      if postUpdateError && postUpdateError!=''
+        #localAlertError.alert.alert-danger.alert-dismissible(role='alert')
+          button.close(type='button', data-dismiss='alert', aria-label='Close')
+            span(aria-hidden='true') ×
+          strong
+          =postUpdateError
+
+      if postUpdateSuccess && postUpdateSuccess!=''
+        #localAlertSuccess.alert.alert-success.alert-dismissible(role='alert')
+          button.close(type='button', data-dismiss='alert', aria-label='Close')
+            span(aria-hidden='true') ×
+          strong
+          =postUpdateSuccess
 
 if !reqUser
 
@@ -39,9 +45,7 @@ if !reqUser
 else
 
   style.
-    .sidebar-outer {
-        position: relative;
-    }
+
     @media (min-width: 768px) {
         .sidebar {
             position: fixed;
@@ -49,19 +53,30 @@ else
             display: inline-block;
             box-sizing: border-box;
             border-left: solid 1px #e0e0e0;
+            right: 60px;
+            padding-left: 10px;
+            max-width: 60px;
         }
+
     }
-  
+
+    .sidebar a {
+      margin: 0 0 10px 10px;
+    }
+
   .row
+
+    .col-xs-12.col-sm-2.col-md-2.col-lg-2.pull-right(style='padding-bottom: 10px;')
+
+      div.sidebar
+
+        a.btn.btn-default.btn-lg(href='javascript:history.go(-1)', role='button').pull-right
+          span.glyphicon.glyphicon-chevron-left(aria-hidden='true')      
+
+        block localMenu
 
     .col-xs-12.col-sm-10.col-md-10.col-lg-10
 
       block localContent
 
-    .col-xs-12.col-sm-2.col-md-2.col-lg-2.sidebar
-
-        block localMenu
-      //-
-        .div
-          | &nbsp;
 

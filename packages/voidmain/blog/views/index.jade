@@ -25,3 +25,18 @@ else
     if section == "delete"
 
       include ./delete.jade    
+
+
+block append endBody
+
+  script.
+    
+    $(document).ready(function () {
+     
+      window.setTimeout(function() {
+        $("#localAlertSuccess").fadeTo(500, 0).slideUp(500, function(){
+          $("#localAlertSuccess").alert('close');
+        });
+      }, 2000);
+
+    });

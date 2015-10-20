@@ -6,13 +6,14 @@ block localMenu
 
       if reqUser
 
-        a.btn.btn-primary.btn-lg.btn-block(href='voidmain/blog/', role='button')
+        a.btn.btn-primary.btn-lg(href='voidmain/blog/', role='button').pull-right
           span.glyphicon.glyphicon-list(aria-hidden='true')
-
-        a.btn.btn-warning.btn-lg.btn-block(href='voidmain/blog/update/'+post.id, role='button')
-          span.glyphicon.glyphicon-edit(aria-hidden='true')
         
-        a.btn.btn-danger.btn-lg.btn-block(href='voidmain/blog/delete/'+post.id, role='button')
+        a.btn.btn-warning.btn-lg(href='voidmain/blog/update/'+post.id, role='button').pull-right
+          span.glyphicon.glyphicon-edit(aria-hidden='true')
+
+       
+        a.btn.btn-danger.btn-lg(href='voidmain/blog/delete/'+post.id, role='button').pull-right
           span.glyphicon.glyphicon-trash(aria-hidden='true')
 
 block localContent
@@ -33,7 +34,3 @@ block localContent
     if post.content
       p
         = post.content
-
-  a.btn.btn-default.btn-lg.btn-block(href='javascript:history.go(-1)', role='button')
-    //- span.glyphicon.glyphicon-return(aria-hidden='true')
-    | Back

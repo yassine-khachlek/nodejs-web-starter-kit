@@ -2,12 +2,12 @@ extends ./layout.jade
 
 block localMenu
 
-  a.btn.btn-primary.btn-lg.btn-block(href='voidmain/blog/', role='button')
+  a.btn.btn-primary.btn-lg(href='voidmain/blog/', role='button').pull-right
     span.glyphicon.glyphicon-list(aria-hidden='true')
 
   if post && post.id
   
-    a.btn.btn-default.btn-lg.btn-block(href='voidmain/blog/read/'+post.id, role='button')
+    a.btn.btn-default.btn-lg(href='voidmain/blog/read/'+post.id, role='button').pull-right
       span.glyphicon.glyphicon-search(aria-hidden='true')
 
 block localContent
@@ -30,5 +30,25 @@ block localContent
         a.btn.btn-default.btn-lg.btn-block(href='voidmain/blog/read/'+post.id, role='button')
           span.glyphicon.glyphicon-remove(aria-hidden='true')
 
+      .col-xs-12.col-sm-12.col-md-12.col-lg-12(style='margin-bottom: 20px;')
 
+    .row
 
+      .col-xs-12.col-sm-12.col-md-12.col-lg-12
+
+        if reqUser
+          if post.published
+            span.label.label-primary Published
+          else
+            span.label.label-warning Unpublished
+
+        article(style="display: block;padding-bottom: 64px;")
+
+          if post.title
+          
+            h1
+              = post.title
+          
+          if post.content
+            p
+              = post.content    

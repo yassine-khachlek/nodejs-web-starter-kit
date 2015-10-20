@@ -86,16 +86,24 @@ html(ng-app="mainModule", ng-controller="mainController")
               strong
               =reqFlashSuccess
 
-    .container-fluid
-      .row
-        div(class="col-xs-12 col-sm-12 col-md-12 col-lg-12")
+        .col-xs-12.col-sm-12.col-md-10.col-lg-10.col-xs-offset-0.col-sm-offset-0.col-md-offset-1.col-lg-offset-1
           div(class="view-container")
             div(ng-view, class="view-frame")
               block content
 
+    .col-xs-12.col-sm-12.col-md-12.col-lg-12(style='height: 400px;')
+
     footer.footer
       .container
         p.text-muted ...
+
+        .row
+          .col-lg-4
+
+          .col-lg-4
+
+          .col-lg-4
+
 
     //- jQuery JavaScript
     //- Loaded before angular, to make the javascript from partial template executable
@@ -127,6 +135,6 @@ html(ng-app="mainModule", ng-controller="mainController")
     script(type='text/javascript' src='components/angular-sanitize/angular-sanitize.min.js')
 
     //- Angular JavaScript application
-    script(type='text/javascript' src='appAngular')
+    script(type='text/javascript' src='voidmain/angular')
 
     block endBody

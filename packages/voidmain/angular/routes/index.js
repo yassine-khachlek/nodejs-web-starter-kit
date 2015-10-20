@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
   res.setHeader('content-type', 'application/javascript');
 
   res.render(
-  	path.join('appAngular', 'index'), 
+  	path.join(path.resolve(__dirname, '../views/index')), 
     {
       base: req.app.get('app').base,
       xhr: req.xhr,
