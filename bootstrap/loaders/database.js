@@ -26,6 +26,15 @@ Database.prototype.getDatabase = function() {
 
   var mongooseConnectionUri = 'mongodb://'+databaseConfig.connections[databaseConfig.default].host+':'+databaseConfig.connections[databaseConfig.default].port+'/'+databaseConfig.connections[databaseConfig.default].database;
   var mongooseConnectionOptions = databaseConfig.connections[databaseConfig.default].connectionOptions;
+
+  if( !mongooseConnectionOptions.user ){
+    delete mongooseConnectionOptions.user;
+  }
+
+  if( mongooseConnectionOptions.pass ){
+    delete mongooseConnectionOptions.pass;
+  }
+
   var mongooseConnection = {};
 
   database.default = {};
